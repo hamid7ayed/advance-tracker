@@ -37,11 +37,6 @@
             margin-bottom: 30px;
         }
         
-        .logo img {
-            max-width: 150px;
-            margin-bottom: 15px;
-        }
-        
         .logo h1 {
             color: #333;
             font-size: 24px;
@@ -124,8 +119,7 @@
 <body>
     <div class="container">
         <div class="logo">
-            <img id="companyLogo" src="https://github.com/hamid7ayed/advance-tracker/blob/main/like1.jpg">
-            <h1 id="companyName">Employee Advance Tracker</h1>
+            <h1>Employee Advance Tracker</h1>
         </div>
         
         <form id="loginForm">
@@ -149,8 +143,8 @@
     </div>
     
     <script>
-        // === YOUR APPS SCRIPT URL ===
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwI7YzZIAt-S9__qX9YUgIyTv4VXx6EeVQp6oYI7RfBfXLnzvTbNEgWNE1jrYKEgm_4/exec';
+        // === UPDATE THIS WITH YOUR NEW APPS SCRIPT URL ===
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxOePJLT5Kf8u5lM3j-B5c4ulOI23kbak3SdBy2ZPYtxQ6nUDEYHPKRjuEPo9GiD2zy/exec';
         
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -162,24 +156,23 @@
             document.getElementById('error').style.display = 'none';
             
             try {
-                // Use GET request for login
                 const loginUrl = `${APPS_SCRIPT_URL}?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
                 console.log("Login URL:", loginUrl);
                 
                 const response = await fetch(loginUrl);
                 const data = await response.json();
-                console.log("Response:", data);
+                console.log("Login response:", data);
                 
-if (data.success) {
-    const userData = {
-        username: data.user.username,
-        role: data.user.role,
-        site: data.user.site,
-        password: password  // ← CRITICAL - must be here
-    };
-    localStorage.setItem('user', JSON.stringify(userData));
-    // ... redirect
-}
+                if (data.success) {
+                    // Store user data WITH password - CRITICAL
+                    const userData = {
+                        username: data.user.username,
+                        role: data.user.role,
+                        site: data.user.site,
+                        password: password
+                    };
+                    localStorage.setItem('user', JSON.stringify(userData));
+                    console.log("Stored user:", userData);
                     
                     // Redirect based on role
                     if (data.user.role === 'sitehead') {
@@ -194,7 +187,7 @@ if (data.success) {
                     document.getElementById('error').style.display = 'block';
                 }
             } catch (error) {
-                console.error("Error:", error);
+                console.error("Login error:", error);
                 document.getElementById('error').textContent = 'Network error: ' + error.message;
                 document.getElementById('error').style.display = 'block';
             } finally {
