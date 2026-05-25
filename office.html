@@ -158,7 +158,7 @@
 <body>
     <div class="header">
         <div>
-            <h1 id="companyName">Office Dashboard</h1>
+            <h1>Office Dashboard</h1>
         </div>
         <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
@@ -177,13 +177,13 @@
                 <div class="form-group">
                     <label>Select Employee</label>
                     <select id="advanceEmployeeId" required>
-                        <option value="">Loading...</option>
+                        <option value="">Loading employees...</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label>Site</label>
                     <select id="advanceSite" required>
-                        <option value="">Loading...</option>
+                        <option value="">Loading sites...</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -208,13 +208,13 @@
                 <div class="form-group">
                     <label>Select Employee</label>
                     <select id="expenseEmployeeId" required>
-                        <option value="">Loading...</option>
+                        <option value="">Loading employees...</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label>Site</label>
                     <select id="expenseSite" required>
-                        <option value="">Loading...</option>
+                        <option value="">Loading sites...</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -247,7 +247,7 @@
                 <div class="form-group">
                     <label>Site</label>
                     <select id="employeeSite" required>
-                        <option value="">Loading...</option>
+                        <option value="">Loading sites...</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -261,28 +261,47 @@
     </div>
     
     <script>
+        // === YOUR APPS SCRIPT URL ===
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6hTdcE5hP6GcMZm3c2Iu4larvrmyozW_R1FlG-SoJBsSarXYhXGr-Br3K7dIZk6VQ/exec';
         
         let currentUser = null;
         let employees = [];
         let sites = [];
         
+        // Check if user is logged in
         const userStr = localStorage.getItem('user');
         if (!userStr) {
             window.location.href = 'index.html';
         }
         currentUser = JSON.parse(userStr);
+        console.log("Office logged in as:", currentUser);
         
-        loadEmployees();
-        loadSites();
+        // Load all data when page loads
+        async function loadAllData() {
+            await loadEmployees();
+            await loadSites();
+        }
         
         async function loadEmployees() {
-            const response = await fetch(`${APPS_SCRIPT_URL}?action=getEmployees&username=${currentUser.username}&password=${currentUser.password}`);
-            const data = await response.json();
-            
-            if (data.success) {
-                employees = data.employees;
-                populateEmployeeDropdowns();
+            try {
+                const url = `${APPS_SCRIPT_URL}?action=getEmployees&username=${currentUser.username}&password=${currentUser.password}`;
+                console.log("Fetching employees from:", url);
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                console.log("Employees response:", data);
+                
+                if (data.success) {
+                    employees = data.employees;
+                    populateEmployeeDropdowns();
+                    return true;
+                } else {
+                    console.error("Failed to load employees:", data.message);
+                    return false;
+                }
+            } catch (error) {
+                console.error("Error loading employees:", error);
+                return false;
             }
         }
         
@@ -291,35 +310,51 @@
             
             dropdowns.forEach(id => {
                 const select = document.getElementById(id);
-                select.innerHTML = '<option value="">Select Employee</option>';
-                
-                employees.forEach(emp => {
-                    const option = document.createElement('option');
-                    option.value = emp.id;
-                    option.textContent = `${emp.name} (${emp.site}) - Salary: ${emp.salary}`;
-                    select.appendChild(option);
-                });
+                if (select) {
+                    select.innerHTML = '<option value="">Select Employee</option>';
+                    employees.forEach(emp => {
+                        const option = document.createElement('option');
+                        option.value = emp.id;
+                        option.textContent = `${emp.name} (${emp.site}) - Salary: ${emp.salary}`;
+                        select.appendChild(option);
+                    });
+                }
             });
         }
         
         async function loadSites() {
-            const response = await fetch(`${APPS_SCRIPT_URL}?action=getSites`);
-            const data = await response.json();
-            
-            if (data.success) {
-                sites = data.sites;
-                const siteSelects = ['advanceSite', 'expenseSite', 'employeeSite'];
+            try {
+                const url = `${APPS_SCRIPT_URL}?action=getSites`;
+                console.log("Fetching sites from:", url);
                 
-                siteSelects.forEach(id => {
-                    const select = document.getElementById(id);
-                    select.innerHTML = '<option value="">Select Site</option>';
-                    sites.forEach(site => {
-                        const option = document.createElement('option');
-                        option.value = site;
-                        option.textContent = site;
-                        select.appendChild(option);
+                const response = await fetch(url);
+                const data = await response.json();
+                console.log("Sites response:", data);
+                
+                if (data.success) {
+                    sites = data.sites;
+                    const siteSelects = ['advanceSite', 'expenseSite', 'employeeSite'];
+                    
+                    siteSelects.forEach(id => {
+                        const select = document.getElementById(id);
+                        if (select) {
+                            select.innerHTML = '<option value="">Select Site</option>';
+                            sites.forEach(site => {
+                                const option = document.createElement('option');
+                                option.value = site;
+                                option.textContent = site;
+                                select.appendChild(option);
+                            });
+                        }
                     });
-                });
+                    return true;
+                } else {
+                    console.error("Failed to load sites");
+                    return false;
+                }
+            } catch (error) {
+                console.error("Error loading sites:", error);
+                return false;
             }
         }
         
@@ -341,25 +376,35 @@
                 notes: document.getElementById('advanceNotes').value
             };
             
-            const response = await fetch(APPS_SCRIPT_URL, {
-                method: 'POST',
-                body: JSON.stringify(data)
-            });
-            const result = await response.json();
-            
-            const msgDiv = document.getElementById('advanceMessage');
-            if (result.success) {
-                msgDiv.className = 'message success';
-                msgDiv.textContent = result.message;
-                document.getElementById('advanceForm').reset();
-            } else {
+            try {
+                const response = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                
+                const msgDiv = document.getElementById('advanceMessage');
+                if (result.success) {
+                    msgDiv.className = 'message success';
+                    msgDiv.textContent = result.message;
+                    document.getElementById('advanceForm').reset();
+                } else {
+                    msgDiv.className = 'message error';
+                    msgDiv.textContent = result.message;
+                }
+                
+                setTimeout(() => {
+                    msgDiv.className = 'message';
+                }, 3000);
+            } catch (error) {
+                console.error("Error:", error);
+                const msgDiv = document.getElementById('advanceMessage');
                 msgDiv.className = 'message error';
-                msgDiv.textContent = result.message;
+                msgDiv.textContent = 'Network error: ' + error.message;
             }
-            
-            setTimeout(() => {
-                msgDiv.className = 'message';
-            }, 3000);
         });
         
         // Add Expense Form
@@ -380,25 +425,35 @@
                 notes: document.getElementById('expenseNotes').value
             };
             
-            const response = await fetch(APPS_SCRIPT_URL, {
-                method: 'POST',
-                body: JSON.stringify(data)
-            });
-            const result = await response.json();
-            
-            const msgDiv = document.getElementById('expenseMessage');
-            if (result.success) {
-                msgDiv.className = 'message success';
-                msgDiv.textContent = result.message;
-                document.getElementById('expenseForm').reset();
-            } else {
+            try {
+                const response = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                
+                const msgDiv = document.getElementById('expenseMessage');
+                if (result.success) {
+                    msgDiv.className = 'message success';
+                    msgDiv.textContent = result.message;
+                    document.getElementById('expenseForm').reset();
+                } else {
+                    msgDiv.className = 'message error';
+                    msgDiv.textContent = result.message;
+                }
+                
+                setTimeout(() => {
+                    msgDiv.className = 'message';
+                }, 3000);
+            } catch (error) {
+                console.error("Error:", error);
+                const msgDiv = document.getElementById('expenseMessage');
                 msgDiv.className = 'message error';
-                msgDiv.textContent = result.message;
+                msgDiv.textContent = 'Network error: ' + error.message;
             }
-            
-            setTimeout(() => {
-                msgDiv.className = 'message';
-            }, 3000);
         });
         
         // Add Employee Form
@@ -415,26 +470,36 @@
                 salary: parseFloat(document.getElementById('employeeSalary').value)
             };
             
-            const response = await fetch(APPS_SCRIPT_URL, {
-                method: 'POST',
-                body: JSON.stringify(data)
-            });
-            const result = await response.json();
-            
-            const msgDiv = document.getElementById('employeeMessage');
-            if (result.success) {
-                msgDiv.className = 'message success';
-                msgDiv.textContent = `${result.message}. Employee ID: ${result.employeeId}`;
-                document.getElementById('employeeForm').reset();
-                loadEmployees();
-            } else {
+            try {
+                const response = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                
+                const msgDiv = document.getElementById('employeeMessage');
+                if (result.success) {
+                    msgDiv.className = 'message success';
+                    msgDiv.textContent = `${result.message}. Employee ID: ${result.employeeId}`;
+                    document.getElementById('employeeForm').reset();
+                    loadEmployees();
+                } else {
+                    msgDiv.className = 'message error';
+                    msgDiv.textContent = result.message;
+                }
+                
+                setTimeout(() => {
+                    msgDiv.className = 'message';
+                }, 3000);
+            } catch (error) {
+                console.error("Error:", error);
+                const msgDiv = document.getElementById('employeeMessage');
                 msgDiv.className = 'message error';
-                msgDiv.textContent = result.message;
+                msgDiv.textContent = 'Network error: ' + error.message;
             }
-            
-            setTimeout(() => {
-                msgDiv.className = 'message';
-            }, 3000);
         });
         
         function showTab(tabName) {
@@ -453,6 +518,9 @@
             localStorage.removeItem('user');
             window.location.href = 'index.html';
         }
+        
+        // Start loading data
+        loadAllData();
     </script>
 </body>
 </html>
