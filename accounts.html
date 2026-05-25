@@ -135,10 +135,11 @@
         let currentUser = null;
         let employees = [];
         
-        const userStr = localStorage.getItem('user');
-        if (!userStr) window.location.href = 'index.html';
-        currentUser = JSON.parse(userStr);
-        console.log("User:", currentUser);
+const userStr = localStorage.getItem('user');
+if (!userStr) window.location.href = 'index.html';
+currentUser = JSON.parse(userStr);
+console.log("User from localStorage:", currentUser);
+console.log("Password exists:", currentUser.password ? "YES" : "NO");  // ← Add this line
         
         async function loadEmployees() {
             const url = `${APPS_SCRIPT_URL}?action=getEmployees&username=${currentUser.username}&password=${currentUser.password}`;
