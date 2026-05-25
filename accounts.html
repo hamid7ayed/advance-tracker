@@ -21,7 +21,6 @@
             min-height: 100vh;
         }
 
-        /* Header */
         .header {
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             color: white;
@@ -34,11 +33,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
-        .header h1 {
-            font-size: 20px;
-            font-weight: 600;
-        }
-
+        .header h1 { font-size: 20px; font-weight: 600; }
         .logout-btn {
             background: rgba(255,255,255,0.15);
             border: none;
@@ -47,15 +42,9 @@
             border-radius: 30px;
             font-size: 14px;
             cursor: pointer;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s;
         }
+        .logout-btn:active { transform: scale(0.95); }
 
-        .logout-btn:active {
-            transform: scale(0.95);
-        }
-
-        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -69,12 +58,8 @@
             border-radius: 20px;
             text-align: center;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            transition: transform 0.2s;
         }
-
-        .stat-card:active {
-            transform: scale(0.98);
-        }
+        .stat-card:active { transform: scale(0.98); }
 
         .stat-number {
             font-size: 32px;
@@ -84,14 +69,8 @@
             background-clip: text;
             color: transparent;
         }
+        .stat-label { font-size: 12px; color: #666; margin-top: 5px; }
 
-        .stat-label {
-            font-size: 12px;
-            color: #666;
-            margin-top: 5px;
-        }
-
-        /* Cards */
         .card {
             background: white;
             border-radius: 24px;
@@ -108,12 +87,7 @@
             padding-bottom: 10px;
             border-bottom: 2px solid #f0f2f5;
         }
-
-        .card-header h3 {
-            font-size: 18px;
-            color: #1a1a2e;
-        }
-
+        .card-header h3 { font-size: 18px; color: #1a1a2e; }
         .card-header .badge {
             background: #667eea;
             color: white;
@@ -122,13 +96,8 @@
             font-size: 12px;
         }
 
-        /* Employee Selector */
-        .employee-selector {
-            background: #f8f9fa;
-            border-radius: 16px;
-            padding: 4px;
-            margin-bottom: 20px;
-        }
+        .form-group { margin-bottom: 15px; }
+        label { font-weight: 500; margin-bottom: 5px; display: block; }
 
         select, input {
             width: 100%;
@@ -137,18 +106,13 @@
             border-radius: 16px;
             font-size: 16px;
             background: white;
-            transition: all 0.3s;
-            -webkit-appearance: none;
-            appearance: none;
         }
-
         select:focus, input:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
         }
 
-        /* Dues Info Box */
         .dues-info {
             background: linear-gradient(135deg, #667eea 10%, #764ba2 100%);
             color: white;
@@ -156,28 +120,15 @@
             border-radius: 20px;
             margin-bottom: 20px;
         }
-
         .dues-row {
             display: flex;
             justify-content: space-between;
             padding: 10px 0;
             border-bottom: 1px solid rgba(255,255,255,0.2);
         }
-
-        .dues-row:last-child {
-            border-bottom: none;
-        }
-
-        .dues-label {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
-        .dues-value {
-            font-size: 18px;
-            font-weight: 700;
-        }
-
+        .dues-row:last-child { border-bottom: none; }
+        .dues-label { font-size: 14px; opacity: 0.9; }
+        .dues-value { font-size: 18px; font-weight: 700; }
         .dues-total {
             font-size: 24px;
             font-weight: 800;
@@ -186,7 +137,6 @@
             border-top: 2px solid rgba(255,255,255,0.3);
         }
 
-        /* Buttons */
         .btn {
             width: 100%;
             padding: 14px;
@@ -197,27 +147,11 @@
             cursor: pointer;
             transition: all 0.3s;
         }
+        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .btn-success { background: #10b981; color: white; }
+        .btn-warning { background: #f59e0b; color: white; }
+        .btn-primary:active, .btn-success:active, .btn-warning:active { transform: scale(0.97); }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .btn-primary:active {
-            transform: scale(0.97);
-        }
-
-        .btn-success {
-            background: #10b981;
-            color: white;
-        }
-
-        .btn-warning {
-            background: #f59e0b;
-            color: white;
-        }
-
-        /* Message */
         .message {
             padding: 12px;
             border-radius: 16px;
@@ -225,55 +159,40 @@
             display: none;
             font-size: 14px;
         }
+        .message.success { background: #d1fae5; color: #065f46; display: block; }
+        .message.error { background: #fee2e2; color: #991b1b; display: block; }
 
-        .message.success {
-            background: #d1fae5;
-            color: #065f46;
-            display: block;
-        }
-
-        .message.error {
-            background: #fee2e2;
-            color: #991b1b;
-            display: block;
-        }
-
-        /* Dues List */
-        .dues-list {
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
+        .dues-list { max-height: 300px; overflow-y: auto; }
         .dues-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 14px;
             border-bottom: 1px solid #f0f2f5;
-            transition: background 0.2s;
+            cursor: pointer;
         }
+        .dues-item:active { background: #f8f9fa; }
+        .dues-item-name { font-weight: 600; color: #1a1a2e; }
+        .dues-item-site { font-size: 12px; color: #888; margin-top: 2px; }
+        .dues-item-amount { font-weight: 700; color: #e53935; }
 
-        .dues-item:active {
-            background: #f8f9fa;
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f2f5;
         }
-
-        .dues-item-name {
+        .transaction-type {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
             font-weight: 600;
-            color: #1a1a2e;
         }
+        .type-advance { background: #fef3c7; color: #d97706; }
+        .type-expense { background: #fee2e2; color: #dc2626; }
+        .type-salary { background: #d1fae5; color: #059669; }
 
-        .dues-item-site {
-            font-size: 12px;
-            color: #888;
-            margin-top: 2px;
-        }
-
-        .dues-item-amount {
-            font-weight: 700;
-            color: #e53935;
-        }
-
-        /* Tab Bar */
         .tab-bar {
             position: fixed;
             bottom: 0;
@@ -284,9 +203,7 @@
             border-top: 1px solid #e0e0e0;
             padding: 8px 16px 16px;
             gap: 8px;
-            box-shadow: 0 -2px 20px rgba(0,0,0,0.05);
         }
-
         .tab {
             flex: 1;
             text-align: center;
@@ -298,65 +215,23 @@
             color: #888;
             cursor: pointer;
             border-radius: 30px;
-            transition: all 0.3s;
         }
-
         .tab.active {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
         }
+        .tab:active { transform: scale(0.95); }
 
-        .tab:active {
-            transform: scale(0.95);
-        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
 
-        /* Tab Content */
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* Recent Transactions */
-        .transaction-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid #f0f2f5;
-        }
-
-        .transaction-type {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .type-advance { background: #fef3c7; color: #d97706; }
-        .type-expense { background: #fee2e2; color: #dc2626; }
-        .type-salary { background: #d1fae5; color: #059669; }
-
-        /* Employee Table */
-        .employee-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
+        .employee-table { width: 100%; border-collapse: collapse; }
         .employee-table th, .employee-table td {
             padding: 12px 8px;
             text-align: left;
             border-bottom: 1px solid #f0f2f5;
         }
-
-        .employee-table th {
-            font-size: 12px;
-            color: #888;
-            font-weight: 500;
-        }
-
+        .employee-table th { font-size: 12px; color: #888; font-weight: 500; }
         .edit-employee-btn {
             background: #f59e0b;
             color: white;
@@ -367,7 +242,6 @@
             cursor: pointer;
         }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -380,7 +254,6 @@
             align-items: center;
             z-index: 1000;
         }
-
         .modal-content {
             background: white;
             padding: 24px;
@@ -390,51 +263,33 @@
             max-height: 90vh;
             overflow-y: auto;
         }
-
         .close-modal {
             float: right;
             font-size: 24px;
             cursor: pointer;
             color: #888;
         }
-
-        /* Loading */
-        .loading {
-            text-align: center;
-            padding: 20px;
-            color: #888;
+        .loading { text-align: center; padding: 20px; color: #888; }
+        .site-readonly {
+            background: #f5f5f5;
+            color: #666;
+            cursor: not-allowed;
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <div>
-            <h1>📊 Accounts Dashboard</h1>
-        </div>
+        <div><h1>📊 Accounts Dashboard</h1></div>
         <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
 
-    <!-- Statistics Cards -->
     <div class="stats-grid" id="statsGrid">
-        <div class="stat-card">
-            <div class="stat-number" id="totalEmployees">0</div>
-            <div class="stat-label">Total Employees</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number" id="totalSites">0</div>
-            <div class="stat-label">Active Sites</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number" id="totalOutstanding">0</div>
-            <div class="stat-label">Total Dues (SAR)</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number" id="employeesWithDues">0</div>
-            <div class="stat-label">With Dues</div>
-        </div>
+        <div class="stat-card"><div class="stat-number" id="totalEmployees">0</div><div class="stat-label">Total Employees</div></div>
+        <div class="stat-card"><div class="stat-number" id="totalSites">0</div><div class="stat-label">Active Sites</div></div>
+        <div class="stat-card"><div class="stat-number" id="totalOutstanding">0</div><div class="stat-label">Total Dues (SAR)</div></div>
+        <div class="stat-card"><div class="stat-number" id="employeesWithDues">0</div><div class="stat-label">With Dues</div></div>
     </div>
 
-    <!-- Tab Bar -->
     <div class="tab-bar">
         <button class="tab active" onclick="showTab('dashboard')">📊 Dashboard</button>
         <button class="tab" onclick="showTab('advance')">💰 Advance</button>
@@ -443,49 +298,38 @@
         <button class="tab" onclick="showTab('employees')">👥 Employees</button>
     </div>
 
-    <!-- ==================== DASHBOARD TAB ==================== -->
+    <!-- DASHBOARD TAB -->
     <div id="tab-dashboard" class="tab-content active">
         <div class="card">
-            <div class="card-header">
-                <h3>⚠️ Outstanding Dues</h3>
-                <span class="badge">Need Recovery</span>
-            </div>
-            <div id="outstandingList" class="dues-list">
-                <div class="loading">Loading...</div>
-            </div>
+            <div class="card-header"><h3>⚠️ Outstanding Dues</h3><span class="badge">Need Recovery</span></div>
+            <div id="outstandingList" class="dues-list"><div class="loading">Loading...</div></div>
         </div>
-
         <div class="card">
-            <div class="card-header">
-                <h3>📋 Recent Transactions</h3>
-                <span class="badge">Last 10</span>
-            </div>
-            <div id="recentTransactions">
-                <div class="loading">Loading...</div>
-            </div>
+            <div class="card-header"><h3>📋 Recent Transactions</h3><span class="badge">Last 10</span></div>
+            <div id="recentTransactions"><div class="loading">Loading...</div></div>
             <button class="btn btn-warning" onclick="loadRecentTransactions()" style="margin-top: 15px;">🔄 Refresh</button>
         </div>
     </div>
 
-    <!-- ==================== ADD ADVANCE TAB ==================== -->
+    <!-- ADD ADVANCE TAB -->
     <div id="tab-advance" class="tab-content">
         <div class="card">
             <h3>💰 Add Advance Payment</h3>
             <form id="advanceForm">
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="font-weight: 500; margin-bottom: 5px; display: block;">Select Employee</label>
+                <div class="form-group">
+                    <label>Select Employee</label>
                     <select id="employeeId" required></select>
                 </div>
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="font-weight: 500; margin-bottom: 5px; display: block;">Site</label>
-                    <input type="text" id="site" placeholder="e.g., Shabab1" required>
+                <div class="form-group">
+                    <label>Site</label>
+                    <input type="text" id="site" readonly class="site-readonly" placeholder="Site will auto-load">
                 </div>
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="font-weight: 500; margin-bottom: 5px; display: block;">Amount (SAR)</label>
+                <div class="form-group">
+                    <label>Amount (SAR)</label>
                     <input type="number" id="amount" required placeholder="0">
                 </div>
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="font-weight: 500; margin-bottom: 5px; display: block;">Notes</label>
+                <div class="form-group">
+                    <label>Notes</label>
                     <input type="text" id="notes" placeholder="Optional">
                 </div>
                 <button type="submit" class="btn btn-primary">➕ Add Advance</button>
@@ -494,25 +338,25 @@
         </div>
     </div>
 
-    <!-- ==================== ADD EXPENSE TAB ==================== -->
+    <!-- ADD EXPENSE TAB -->
     <div id="tab-expense" class="tab-content">
         <div class="card">
             <h3>📝 Add Expense</h3>
             <form id="expenseForm">
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="font-weight: 500; margin-bottom: 5px; display: block;">Select Employee</label>
+                <div class="form-group">
+                    <label>Select Employee</label>
                     <select id="expenseEmployeeId" required></select>
                 </div>
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="font-weight: 500; margin-bottom: 5px; display: block;">Site</label>
-                    <input type="text" id="expenseSite" placeholder="e.g., Shabab1" required>
+                <div class="form-group">
+                    <label>Site</label>
+                    <input type="text" id="expenseSite" readonly class="site-readonly" placeholder="Site will auto-load">
                 </div>
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="font-weight: 500; margin-bottom: 5px; display: block;">Amount (SAR)</label>
+                <div class="form-group">
+                    <label>Amount (SAR)</label>
                     <input type="number" id="expenseAmount" required placeholder="0">
                 </div>
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="font-weight: 500; margin-bottom: 5px; display: block;">Notes</label>
+                <div class="form-group">
+                    <label>Notes</label>
                     <input type="text" id="expenseNotes" placeholder="Optional">
                 </div>
                 <button type="submit" class="btn btn-primary">📝 Add Expense</button>
@@ -521,57 +365,31 @@
         </div>
     </div>
 
-    <!-- ==================== SALARY PAYMENT TAB (WITH DUES DISPLAY) ==================== -->
+    <!-- SALARY PAYMENT TAB -->
     <div id="tab-salary" class="tab-content">
         <div class="card">
             <h3>💵 Process Salary Payment</h3>
             <form id="salaryForm">
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="font-weight: 500; margin-bottom: 5px; display: block;">Select Employee</label>
+                <div class="form-group">
+                    <label>Select Employee</label>
                     <select id="salaryEmployeeId" required></select>
                 </div>
-                
-                <!-- Dues Information - Shows when employee selected -->
                 <div id="salaryDuesInfo" style="display: none;">
                     <div class="dues-info">
-                        <div class="dues-row">
-                            <span class="dues-label">💰 Monthly Salary</span>
-                            <span class="dues-value" id="salaryDisplay">-</span>
-                        </div>
-                        <div class="dues-row">
-                            <span class="dues-label">📈 Advances This Month</span>
-                            <span class="dues-value" id="advancesDisplay">-</span>
-                        </div>
-                        <div class="dues-row">
-                            <span class="dues-label">📊 Expenses This Month</span>
-                            <span class="dues-value" id="expensesDisplay">-</span>
-                        </div>
-                        <div class="dues-row">
-                            <span class="dues-label">💵 Paid This Month</span>
-                            <span class="dues-value" id="paidDisplay">-</span>
-                        </div>
-                        <div class="dues-row">
-                            <span class="dues-label">📦 Carried Over</span>
-                            <span class="dues-value" id="carriedDisplay">-</span>
-                        </div>
-                        <div class="dues-total">
-                            <div style="display: flex; justify-content: space-between;">
-                                <span>🎯 TOTAL DUES</span>
-                                <span id="totalDuesDisplay">0 SAR</span>
-                            </div>
-                        </div>
+                        <div class="dues-row"><span class="dues-label">💰 Monthly Salary</span><span class="dues-value" id="salaryDisplay">-</span></div>
+                        <div class="dues-row"><span class="dues-label">📈 Advances This Month</span><span class="dues-value" id="advancesDisplay">-</span></div>
+                        <div class="dues-row"><span class="dues-label">📊 Expenses This Month</span><span class="dues-value" id="expensesDisplay">-</span></div>
+                        <div class="dues-row"><span class="dues-label">💵 Paid This Month</span><span class="dues-value" id="paidDisplay">-</span></div>
+                        <div class="dues-row"><span class="dues-label">📦 Carried Over</span><span class="dues-value" id="carriedDisplay">-</span></div>
+                        <div class="dues-total"><div style="display: flex; justify-content: space-between;"><span>🎯 TOTAL DUES</span><span id="totalDuesDisplay">0 SAR</span></div></div>
                         <div style="margin-top: 15px; background: rgba(255,255,255,0.15); padding: 12px; border-radius: 16px;">
-                            <div style="display: flex; justify-content: space-between;">
-                                <span>✨ Suggested Payment</span>
-                                <span id="suggestedDisplay" style="font-weight: 800;">0 SAR</span>
-                            </div>
+                            <div style="display: flex; justify-content: space-between;"><span>✨ Suggested Payment</span><span id="suggestedDisplay" style="font-weight: 800;">0 SAR</span></div>
                             <div style="font-size: 12px; margin-top: 5px;">(Amount to clear all dues)</div>
                         </div>
                     </div>
                 </div>
-
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="font-weight: 500; margin-bottom: 5px; display: block;">Amount Paid (SAR)</label>
+                <div class="form-group">
+                    <label>Amount Paid (SAR)</label>
                     <input type="number" id="salaryAmount" required placeholder="0" step="any">
                 </div>
                 <button type="submit" class="btn btn-success">✅ Record Salary Payment</button>
@@ -580,21 +398,14 @@
         </div>
     </div>
 
-    <!-- ==================== EMPLOYEES TAB ==================== -->
+    <!-- EMPLOYEES TAB -->
     <div id="tab-employees" class="tab-content">
         <div class="card">
-            <div class="card-header">
-                <h3>👥 All Employees</h3>
-                <button class="edit-employee-btn" onclick="showAddEmployeeForm()" style="background: #10b981;">➕ Add</button>
-            </div>
+            <div class="card-header"><h3>👥 All Employees</h3><button class="edit-employee-btn" onclick="showAddEmployeeForm()" style="background: #10b981;">➕ Add</button></div>
             <div style="overflow-x: auto;">
-                <table class="employee-table" id="employeeTable">
-                    <thead>
-                        <tr><th>Name</th><th>Site</th><th>Salary</th><th>Actions</th></tr>
-                    </thead>
-                    <tbody id="employeeTableBody">
-                        <tr><td colspan="4" class="loading">Loading...</td></tr>
-                    </tbody>
+                <table class="employee-table">
+                    <thead><tr><th>Name</th><th>Site</th><th>Salary</th><th>Actions</th></tr></thead>
+                    <tbody id="employeeTableBody"><tr><td colspan="4" class="loading">Loading...</td></tr></tbody>
                 </table>
             </div>
         </div>
@@ -606,22 +417,10 @@
             <span class="close-modal" onclick="closeAddEmployeeModal()">&times;</span>
             <h3 style="margin-bottom: 20px;">➕ Add New Employee</h3>
             <form id="addEmployeeForm">
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label>Full Name</label>
-                    <input type="text" id="newEmpName" required>
-                </div>
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label>Iqama Number</label>
-                    <input type="text" id="newEmpIqama" required>
-                </div>
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label>Site</label>
-                    <input type="text" id="newEmpSite" required>
-                </div>
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label>Salary (SAR)</label>
-                    <input type="number" id="newEmpSalary" required>
-                </div>
+                <div class="form-group"><label>Full Name</label><input type="text" id="newEmpName" required></div>
+                <div class="form-group"><label>Iqama Number</label><input type="text" id="newEmpIqama" required></div>
+                <div class="form-group"><label>Site</label><select id="newEmpSite" required></select></div>
+                <div class="form-group"><label>Salary (SAR)</label><input type="number" id="newEmpSalary" required></div>
                 <button type="submit" class="btn btn-primary">Add Employee</button>
             </form>
             <div id="addEmployeeMessage" class="message"></div>
@@ -635,29 +434,11 @@
             <h3 style="margin-bottom: 20px;">✏️ Edit Employee</h3>
             <form id="editEmployeeForm">
                 <input type="hidden" id="editEmpId">
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label>Name</label>
-                    <input type="text" id="editEmpName" required>
-                </div>
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label>Iqama</label>
-                    <input type="text" id="editEmpIqama" required>
-                </div>
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label>Site</label>
-                    <input type="text" id="editEmpSite" required>
-                </div>
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label>Salary (SAR)</label>
-                    <input type="number" id="editEmpSalary" required>
-                </div>
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label>Status</label>
-                    <select id="editEmpStatus">
-                        <option value="Active">Active</option>
-                        <option value="Inactive">Inactive</option>
-                    </select>
-                </div>
+                <div class="form-group"><label>Name</label><input type="text" id="editEmpName" required></div>
+                <div class="form-group"><label>Iqama</label><input type="text" id="editEmpIqama" required></div>
+                <div class="form-group"><label>Site</label><select id="editEmpSite" required></select></div>
+                <div class="form-group"><label>Salary (SAR)</label><input type="number" id="editEmpSalary" required></div>
+                <div class="form-group"><label>Status</label><select id="editEmpStatus"><option value="Active">Active</option><option value="Inactive">Inactive</option></select></div>
                 <button type="submit" class="btn btn-primary">Save Changes</button>
             </form>
             <div id="editEmployeeMessage" class="message"></div>
@@ -665,21 +446,37 @@
     </div>
 
     <script>
-        const URL = 'https://script.google.com/macros/s/AKfycbwI7YzZIAt-S9__qX9YUgIyTv4VXx6EeVQp6oYI7RfBfXLnzvTbNEgWNE1jrYKEgm_4/exec';
+        const URL = 'https://script.google.com/macros/s/AKfycbwI7YzZIAt-S9__qX9YUgIyTv4VXx6EeVQp6oYI7RfBfXLnzvTbNEgWNE1jrYKEgm_4/execc';
         
         let currentUser = null;
         let employees = [];
-        let allTransactions = [];
+        let sites = [];
         
         const userStr = localStorage.getItem('user');
         if (!userStr) window.location.href = 'index.html';
         currentUser = JSON.parse(userStr);
-        console.log("Welcome:", currentUser.username);
         
         async function loadAllData() {
+            await loadSites();
             await loadEmployees();
             await loadDashboard();
             await loadRecentTransactions();
+        }
+        
+        async function loadSites() {
+            const response = await fetch(`${URL}?action=getSites`);
+            const data = await response.json();
+            sites = data.success && data.sites ? data.sites : ['Shabab1', 'Shabab2', 'Shabab3', 'Shabab4', 'Shabab5', 'Shabab6', 'Shabab7', 'Shabab8', 'Shabab9', 'Like1', 'Like2', 'Like3', 'Like4', 'Like5', 'Like6'];
+            
+            // Populate site dropdowns
+            const siteDropdowns = ['newEmpSite', 'editEmpSite'];
+            siteDropdowns.forEach(id => {
+                const select = document.getElementById(id);
+                if (select) {
+                    select.innerHTML = '<option value="">Select Site</option>';
+                    sites.forEach(site => select.innerHTML += `<option value="${site}">${site}</option>`);
+                }
+            });
         }
         
         async function loadEmployees() {
@@ -702,12 +499,26 @@
                     select.innerHTML = '<option value="">Select Employee</option>';
                     employees.forEach(e => {
                         if (e.status !== 'Inactive') {
-                            select.innerHTML += `<option value="${e.id}">${e.name} - ${e.site} - ${e.salary} SAR</option>`;
+                            select.innerHTML += `<option value="${e.id}" data-site="${e.site}">${e.name} - ${e.site} - ${e.salary} SAR</option>`;
                         }
                     });
                 }
             });
         }
+        
+        // Auto-load site when employee selected in Advance tab
+        document.getElementById('employeeId')?.addEventListener('change', (e) => {
+            const selectedOption = e.target.options[e.target.selectedIndex];
+            const site = selectedOption?.getAttribute('data-site') || '';
+            document.getElementById('site').value = site;
+        });
+        
+        // Auto-load site when employee selected in Expense tab
+        document.getElementById('expenseEmployeeId')?.addEventListener('change', (e) => {
+            const selectedOption = e.target.options[e.target.selectedIndex];
+            const site = selectedOption?.getAttribute('data-site') || '';
+            document.getElementById('expenseSite').value = site;
+        });
         
         function updateEmployeeTable() {
             const tbody = document.getElementById('employeeTableBody');
@@ -739,11 +550,8 @@
                 const container = document.getElementById('outstandingList');
                 if (data.outstandingEmployees.length > 0) {
                     container.innerHTML = data.outstandingEmployees.map(emp => `
-                        <div class="dues-item" onclick="selectEmployeeForSalary(${emp.id})" style="cursor: pointer;">
-                            <div>
-                                <div class="dues-item-name">${emp.name}</div>
-                                <div class="dues-item-site">${emp.site}</div>
-                            </div>
+                        <div class="dues-item" onclick="selectEmployeeForSalary(${emp.id})">
+                            <div><div class="dues-item-name">${emp.name}</div><div class="dues-item-site">${emp.site}</div></div>
                             <div class="dues-item-amount">${emp.dues} SAR</div>
                         </div>
                     `).join('');
@@ -754,10 +562,21 @@
         }
         
         async function loadRecentTransactions() {
-            // For now, fetch from CurrentMonth sheet via a new function
-            // Placeholder - will show message
             const container = document.getElementById('recentTransactions');
-            container.innerHTML = '<div class="loading">📋 Recent transactions will appear here. Check Google Sheets → CurrentMonth tab for all entries.</div>';
+            container.innerHTML = '<div class="loading">Loading transactions...</div>';
+            
+            try {
+                // Fetch CurrentMonth sheet data
+                // This requires a new function in Apps Script - for now, show message
+                container.innerHTML = `
+                    <div style="padding: 10px 0;">
+                        <div class="transaction-item"><span>📋 To view recent transactions, check the <strong>CurrentMonth</strong> sheet in Google Sheets</span></div>
+                        <div class="transaction-item"><span>💡 Tip: Accounts can see all entries directly in the spreadsheet</span></div>
+                    </div>
+                `;
+            } catch (error) {
+                container.innerHTML = '<div class="loading">Error loading transactions</div>';
+            }
         }
         
         // Salary Payment - Load Dues when employee selected
@@ -777,17 +596,7 @@
                 document.getElementById('expensesDisplay').textContent = `${data.expensesThisMonth} SAR`;
                 document.getElementById('paidDisplay').textContent = `${data.salaryPaidThisMonth} SAR`;
                 document.getElementById('carriedDisplay').textContent = `${data.carriedOverDues} SAR`;
-                
-                const totalDuesElem = document.getElementById('totalDuesDisplay');
-                totalDuesElem.textContent = `${data.totalDues} SAR`;
-                if (data.totalDues < 0) {
-                    totalDuesElem.style.color = '#fbbf24';
-                } else if (data.totalDues > 0) {
-                    totalDuesElem.style.color = '#fca5a5';
-                } else {
-                    totalDuesElem.style.color = '#86efac';
-                }
-                
+                document.getElementById('totalDuesDisplay').textContent = `${data.totalDues} SAR`;
                 document.getElementById('suggestedDisplay').textContent = `${data.suggestedPayment} SAR`;
                 document.getElementById('salaryDuesInfo').style.display = 'block';
             }
@@ -811,7 +620,7 @@
             const response = await fetch(`${URL}?action=addAdvance&username=${currentUser.username}&password=${currentUser.password}&employeeId=${emp.id}&employeeName=${encodeURIComponent(emp.name)}&site=${encodeURIComponent(document.getElementById('site').value)}&amount=${document.getElementById('amount').value}&notes=${encodeURIComponent(document.getElementById('notes').value)}`);
             const result = await response.json();
             showMessage('advanceMessage', result);
-            if (result.success) e.target.reset();
+            if (result.success) { e.target.reset(); document.getElementById('site').value = ''; loadDashboard(); }
         });
         
         // Add Expense
@@ -823,7 +632,7 @@
             const response = await fetch(`${URL}?action=addExpense&username=${currentUser.username}&password=${currentUser.password}&employeeId=${emp.id}&employeeName=${encodeURIComponent(emp.name)}&site=${encodeURIComponent(document.getElementById('expenseSite').value)}&amount=${document.getElementById('expenseAmount').value}&notes=${encodeURIComponent(document.getElementById('expenseNotes').value)}`);
             const result = await response.json();
             showMessage('expenseMessage', result);
-            if (result.success) e.target.reset();
+            if (result.success) { e.target.reset(); document.getElementById('expenseSite').value = ''; loadDashboard(); }
         });
         
         // Salary Payment
@@ -843,13 +652,8 @@
         });
         
         // Add Employee
-        function showAddEmployeeForm() {
-            document.getElementById('addEmployeeModal').style.display = 'flex';
-        }
-        
-        function closeAddEmployeeModal() {
-            document.getElementById('addEmployeeModal').style.display = 'none';
-        }
+        function showAddEmployeeForm() { document.getElementById('addEmployeeModal').style.display = 'flex'; }
+        function closeAddEmployeeModal() { document.getElementById('addEmployeeModal').style.display = 'none'; }
         
         document.getElementById('addEmployeeForm')?.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -859,6 +663,7 @@
             if (result.success) {
                 closeAddEmployeeModal();
                 loadEmployees();
+                loadDashboard();
                 document.getElementById('addEmployeeForm').reset();
             }
         });
@@ -876,14 +681,18 @@
             document.getElementById('editEmployeeModal').style.display = 'flex';
         }
         
-        function closeEditEmployeeModal() {
-            document.getElementById('editEmployeeModal').style.display = 'none';
-        }
+        function closeEditEmployeeModal() { document.getElementById('editEmployeeModal').style.display = 'none'; }
         
         document.getElementById('editEmployeeForm')?.addEventListener('submit', async (e) => {
             e.preventDefault();
-            // This requires updateEmployee function in Apps Script
-            showMessage('editEmployeeMessage', { success: false, message: "Update employee feature - Add updateEmployee function to Apps Script" });
+            const response = await fetch(`${URL}?action=updateEmployee&username=${currentUser.username}&password=${currentUser.password}&employeeId=${document.getElementById('editEmpId').value}&name=${encodeURIComponent(document.getElementById('editEmpName').value)}&iqamaNo=${encodeURIComponent(document.getElementById('editEmpIqama').value)}&site=${encodeURIComponent(document.getElementById('editEmpSite').value)}&salary=${document.getElementById('editEmpSalary').value}&status=${document.getElementById('editEmpStatus').value}`);
+            const result = await response.json();
+            showMessage('editEmployeeMessage', result);
+            if (result.success) {
+                closeEditEmployeeModal();
+                loadEmployees();
+                loadDashboard();
+            }
         });
         
         function showMessage(elementId, result) {
