@@ -11,8 +11,9 @@
         if (!userStr) {
             window.location.href = 'index.html';
         }
-        currentUser = JSON.parse(userStr);
-        console.log("Logged in as:", currentUser);
+currentUser = JSON.parse(userStr);
+console.log("Logged in as:", currentUser);
+        console.log("Password present:", currentUser.password ? "Yes" : "No");
         
         // Load all data when page loads
         async function loadAllData() {
