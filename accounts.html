@@ -166,6 +166,12 @@
             padding: 20px;
             color: #667eea;
         }
+        
+        .error-text {
+            text-align: center;
+            padding: 20px;
+            color: #e53935;
+        }
     </style>
 </head>
 <body>
@@ -330,13 +336,13 @@
         </div>
     </div>
     
-       <script>
+    <script>
         // === YOUR APPS SCRIPT URL ===
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6hTdcE5hP6GcMZm3c2Iu4larvrmyozW_R1FlG-SoJBsSarXYhXGr-Br3K7dIZk6VQ/exec';
         
         let currentUser = null;
         let employees = [];
-        let sites = [];
+        let sites = ['Riyadh', 'Jeddah', 'Dammam']; // Default sites if API fails
         
         // Check if user is logged in
         const userStr = localStorage.getItem('user');
@@ -373,16 +379,19 @@
                 const data = await response.json();
                 console.log("Employees response:", data);
                 
-                if (data.success) {
+                if (data.success && data.employees) {
                     employees = data.employees;
                     populateEmployeeDropdowns();
                 } else {
-                    console.error("Failed to load employees:", data.message);
-                    showError("Failed to load employees: " + data.message);
+                    console.error("Failed to load employees:", data);
+                    // Try to get from sheet directly? For now, use empty array
+                    employees = [];
+                    populateEmployeeDropdowns();
                 }
             } catch (error) {
                 console.error("Error loading employees:", error);
-                showError("Network error loading employees");
+                employees = [];
+                populateEmployeeDropdowns();
             }
         }
         
@@ -393,13 +402,16 @@
                 const select = document.getElementById(id);
                 if (select) {
                     select.innerHTML = '<option value="">Select Employee</option>';
-                    employees.forEach(emp => {
-                        const option = document.createElement('option');
-                        option.value = emp.id;
-                        // Clean display: Name (Site) - Salary: X SAR
-                        option.textContent = `${emp.name} (${emp.site}) - ${emp.salary} SAR`;
-                        select.appendChild(option);
-                    });
+                    if (employees.length === 0) {
+                        select.innerHTML = '<option value="">No employees found</option>';
+                    } else {
+                        employees.forEach(emp => {
+                            const option = document.createElement('option');
+                            option.value = emp.id;
+                            option.textContent = `${emp.name} - ${emp.site} - ${emp.salary} SAR`;
+                            select.appendChild(option);
+                        });
+                    }
                 }
             });
         }
@@ -413,28 +425,28 @@
                 const data = await response.json();
                 console.log("Sites response:", data);
                 
-                if (data.success) {
+                if (data.success && data.sites && data.sites.length > 0) {
                     sites = data.sites;
-                    const siteSelects = ['advanceSite', 'expenseSite', 'salarySite', 'employeeSite'];
-                    
-                    siteSelects.forEach(id => {
-                        const select = document.getElementById(id);
-                        if (select) {
-                            select.innerHTML = '<option value="">Select Site</option>';
-                            sites.forEach(site => {
-                                const option = document.createElement('option');
-                                option.value = site;
-                                option.textContent = site;
-                                select.appendChild(option);
-                            });
-                        }
-                    });
-                } else {
-                    console.error("Failed to load sites");
                 }
             } catch (error) {
-                console.error("Error loading sites:", error);
+                console.error("Error loading sites, using defaults:", error);
+                // Keep default sites
             }
+            
+            // Populate site dropdowns with whatever we have
+            const siteSelects = ['advanceSite', 'expenseSite', 'salarySite', 'employeeSite'];
+            siteSelects.forEach(id => {
+                const select = document.getElementById(id);
+                if (select) {
+                    select.innerHTML = '<option value="">Select Site</option>';
+                    sites.forEach(site => {
+                        const option = document.createElement('option');
+                        option.value = site;
+                        option.textContent = site;
+                        select.appendChild(option);
+                    });
+                }
+            });
         }
         
         async function loadDashboard() {
@@ -452,30 +464,19 @@
                 console.log("Dashboard response:", data);
                 
                 const container = document.getElementById('outstandingList');
-                if (data.success && data.outstandingEmployees) {
-                    if (data.outstandingEmployees.length === 0) {
-                        container.innerHTML = '<p>No outstanding dues</p>';
-                    } else {
-                        container.innerHTML = data.outstandingEmployees.map(emp => `
-                            <div class="dues-item">
-                                <span><strong>${emp.name}</strong> (${emp.site})</span>
-                                <span style="color: #e53935;">${emp.dues} SAR</span>
-                            </div>
-                        `).join('');
-                    }
+                if (data.success && data.outstandingEmployees && data.outstandingEmployees.length > 0) {
+                    container.innerHTML = data.outstandingEmployees.map(emp => `
+                        <div class="dues-item">
+                            <span><strong>${emp.name}</strong> (${emp.site})</span>
+                            <span style="color: #e53935;">${emp.dues} SAR</span>
+                        </div>
+                    `).join('');
                 } else {
-                    container.innerHTML = '<p>No data available</p>';
+                    container.innerHTML = '<p>No outstanding dues</p>';
                 }
             } catch (error) {
                 console.error("Error loading dashboard:", error);
-                document.getElementById('outstandingList').innerHTML = '<p>Error loading data. Check console.</p>';
-            }
-        }
-        
-        function showError(msg) {
-            const container = document.getElementById('outstandingList');
-            if (container) {
-                container.innerHTML = `<p style="color: red;">${msg}</p>`;
+                document.getElementById('outstandingList').innerHTML = '<p class="error-text">Error loading data</p>';
             }
         }
         
@@ -514,7 +515,7 @@
                         msgDiv.className = 'message success';
                         msgDiv.textContent = result.message;
                         advanceForm.reset();
-                        loadDashboard();
+                        alert('Advance added successfully!');
                     } else {
                         msgDiv.className = 'message error';
                         msgDiv.textContent = result.message;
@@ -567,7 +568,7 @@
                         msgDiv.className = 'message success';
                         msgDiv.textContent = result.message;
                         expenseForm.reset();
-                        loadDashboard();
+                        alert('Expense added successfully!');
                     } else {
                         msgDiv.className = 'message error';
                         msgDiv.textContent = result.message;
@@ -620,7 +621,7 @@
                         msgDiv.className = 'message success';
                         msgDiv.textContent = result.message;
                         salaryForm.reset();
-                        loadDashboard();
+                        alert('Salary payment recorded!');
                     } else {
                         msgDiv.className = 'message error';
                         msgDiv.textContent = result.message;
@@ -669,7 +670,8 @@
                         msgDiv.className = 'message success';
                         msgDiv.textContent = `${result.message}. Employee ID: ${result.employeeId}`;
                         employeeForm.reset();
-                        loadEmployees();
+                        alert('Employee added!');
+                        loadEmployees(); // Reload employee list
                     } else {
                         msgDiv.className = 'message error';
                         msgDiv.textContent = result.message;
@@ -712,7 +714,7 @@
                 if (result.success) {
                     msgDiv.className = 'message success';
                     msgDiv.textContent = result.message;
-                    loadDashboard();
+                    alert('Month end processed successfully!');
                 } else {
                     msgDiv.className = 'message error';
                     msgDiv.textContent = result.message;
