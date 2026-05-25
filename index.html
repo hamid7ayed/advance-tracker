@@ -170,16 +170,16 @@
                 const data = await response.json();
                 console.log("Response:", data);
                 
-                if (data.success) {
-                    // Store user data WITH PASSWORD
-                    const userData = {
-    username: data.user.username,
-    role: data.user.role,
-    site: data.user.site,
-    password: password  // ← THIS LINE IS CRITICAL
-};
-                    localStorage.setItem('user', JSON.stringify(userData));
-                    console.log("Stored user data:", userData);
+if (data.success) {
+    const userData = {
+        username: data.user.username,
+        role: data.user.role,
+        site: data.user.site,
+        password: password  // ← THIS MUST BE HERE
+    };
+    localStorage.setItem('user', JSON.stringify(userData));
+    // ... redirect
+}
                     
                     // Redirect based on role
                     if (data.user.role === 'sitehead') {
