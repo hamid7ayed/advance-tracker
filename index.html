@@ -175,7 +175,7 @@ if (data.success) {
         username: data.user.username,
         role: data.user.role,
         site: data.user.site,
-        password: password  // ← THIS MUST BE HERE
+        password: password  // ← CRITICAL - must be here
     };
     localStorage.setItem('user', JSON.stringify(userData));
     // ... redirect
