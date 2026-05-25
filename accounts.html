@@ -28,6 +28,7 @@
         .tab-content.active { display: block; }
         .dues-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #e0e0e0; }
         .loading-text { text-align: center; padding: 20px; color: #667eea; }
+        .debug-info { background: #f0f0f0; padding: 10px; border-radius: 8px; font-size: 11px; margin-top: 10px; word-break: break-all; }
     </style>
 </head>
 <body>
@@ -47,6 +48,8 @@
         <div class="card">
             <h3>Outstanding Dues</h3>
             <div id="outstandingList"><div class="loading-text">Loading...</div></div>
+            <button onclick="refreshDashboard()" style="margin-top: 15px; background: #4caf50;">Refresh Dashboard</button>
+            <div id="debugInfo" class="debug-info"></div>
         </div>
     </div>
     
@@ -129,73 +132,116 @@
     </div>
     
     <script>
-        // === UPDATE THIS WITH YOUR NEW APPS SCRIPT URL ===
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwI7YzZIAt-S9__qX9YUgIyTv4VXx6EeVQp6oYI7RfBfXLnzvTbNEgWNE1jrYKEgm_4/exec';
         
         let currentUser = null;
         let employees = [];
         
-const userStr = localStorage.getItem('user');
-if (!userStr) window.location.href = 'index.html';
-currentUser = JSON.parse(userStr);
-console.log("User from localStorage:", currentUser);
-console.log("Password exists:", currentUser.password ? "YES" : "NO");  // ← Add this line
+        const userStr = localStorage.getItem('user');
+        if (!userStr) {
+            window.location.href = 'index.html';
+        }
+        currentUser = JSON.parse(userStr);
+        console.log("User loaded:", currentUser);
         
         async function loadEmployees() {
-            const url = `${APPS_SCRIPT_URL}?action=getEmployees&username=${currentUser.username}&password=${currentUser.password}`;
-            const response = await fetch(url);
-            const data = await response.json();
-            if (data.success) {
-                employees = data.employees;
-                const dropdowns = ['advanceEmployeeId', 'expenseEmployeeId'];
-                dropdowns.forEach(id => {
-                    const select = document.getElementById(id);
-                    if (select) {
-                        select.innerHTML = '<option value="">Select Employee</option>';
-                        employees.forEach(emp => {
-                            select.innerHTML += `<option value="${emp.id}">${emp.name} (${emp.site}) - ${emp.salary} SAR</option>`;
-                        });
-                    }
-                });
+            try {
+                const url = `${APPS_SCRIPT_URL}?action=getEmployees&username=${currentUser.username}&password=${currentUser.password}`;
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.success && data.employees) {
+                    employees = data.employees;
+                    const dropdowns = ['advanceEmployeeId', 'expenseEmployeeId'];
+                    dropdowns.forEach(id => {
+                        const select = document.getElementById(id);
+                        if (select) {
+                            select.innerHTML = '<option value="">-- Select Employee --</option>';
+                            employees.forEach(emp => {
+                                const option = document.createElement('option');
+                                option.value = emp.id;
+                                option.textContent = `${emp.name} | ${emp.site} | ${emp.salary} SAR`;
+                                select.appendChild(option);
+                            });
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error("Error loading employees:", error);
             }
         }
         
         async function loadSites() {
-            const url = `${APPS_SCRIPT_URL}?action=getSites`;
-            const response = await fetch(url);
-            const data = await response.json();
-            const sites = data.success && data.sites ? data.sites : ['Riyadh', 'Jeddah', 'Dammam'];
-            const siteSelects = ['advanceSite', 'expenseSite', 'employeeSite'];
-            siteSelects.forEach(id => {
-                const select = document.getElementById(id);
-                if (select) {
-                    select.innerHTML = '<option value="">Select Site</option>';
-                    sites.forEach(site => {
-                        select.innerHTML += `<option value="${site}">${site}</option>`;
-                    });
-                }
-            });
+            try {
+                const url = `${APPS_SCRIPT_URL}?action=getSites`;
+                const response = await fetch(url);
+                const data = await response.json();
+                const sites = data.success && data.sites ? data.sites : ['Riyadh', 'Jeddah', 'Dammam'];
+                
+                const siteSelects = ['advanceSite', 'expenseSite', 'employeeSite'];
+                siteSelects.forEach(id => {
+                    const select = document.getElementById(id);
+                    if (select) {
+                        select.innerHTML = '<option value="">-- Select Site --</option>';
+                        sites.forEach(site => {
+                            const option = document.createElement('option');
+                            option.value = site;
+                            option.textContent = site;
+                            select.appendChild(option);
+                        });
+                    }
+                });
+            } catch (error) {
+                console.error("Error loading sites:", error);
+            }
         }
         
         async function loadDashboard() {
-            const url = `${APPS_SCRIPT_URL}?action=getDashboardData&username=${currentUser.username}&password=${currentUser.password}`;
-            const response = await fetch(url);
-            const data = await response.json();
-            const container = document.getElementById('outstandingList');
-            if (data.success && data.outstandingEmployees && data.outstandingEmployees.length > 0) {
-                container.innerHTML = data.outstandingEmployees.map(emp => 
-                    `<div class="dues-item"><span><strong>${emp.name}</strong> (${emp.site})</span><span>${emp.dues} SAR</span></div>`
-                ).join('');
-            } else {
-                container.innerHTML = '<p>No outstanding dues</p>';
+            const debugDiv = document.getElementById('debugInfo');
+            debugDiv.innerHTML = 'Fetching dashboard data...';
+            
+            try {
+                const url = `${APPS_SCRIPT_URL}?action=getDashboardData&username=${currentUser.username}&password=${currentUser.password}`;
+                console.log("Dashboard URL:", url);
+                const response = await fetch(url);
+                const data = await response.json();
+                console.log("Dashboard data:", data);
+                
+                debugDiv.innerHTML = `Response: ${JSON.stringify(data, null, 2)}`;
+                
+                const container = document.getElementById('outstandingList');
+                if (data.success && data.outstandingEmployees && data.outstandingEmployees.length > 0) {
+                    container.innerHTML = '';
+                    data.outstandingEmployees.forEach(emp => {
+                        const div = document.createElement('div');
+                        div.className = 'dues-item';
+                        div.innerHTML = `<span><strong>${emp.name}</strong> (${emp.site})</span><span style="color: #e53935; font-weight: bold;">${emp.dues} SAR</span>`;
+                        container.appendChild(div);
+                    });
+                } else {
+                    container.innerHTML = '<p>No outstanding dues. Add data to OutstandingDues sheet in Google Sheets.</p>';
+                }
+            } catch (error) {
+                console.error("Error loading dashboard:", error);
+                document.getElementById('outstandingList').innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+                debugDiv.innerHTML = `Error: ${error.message}`;
             }
+        }
+        
+        function refreshDashboard() {
+            loadDashboard();
         }
         
         // Add Advance
         document.getElementById('advanceForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const employee = employees.find(e => e.id == document.getElementById('advanceEmployeeId').value);
-            const url = `${APPS_SCRIPT_URL}?action=addAdvance&username=${currentUser.username}&password=${currentUser.password}&employeeId=${employee?.id}&employeeName=${employee?.name}&site=${document.getElementById('advanceSite').value}&amount=${document.getElementById('advanceAmount').value}&notes=${document.getElementById('advanceNotes').value}`;
+            if (!employee) {
+                alert("Please select an employee");
+                return;
+            }
+            
+            const url = `${APPS_SCRIPT_URL}?action=addAdvance&username=${currentUser.username}&password=${currentUser.password}&employeeId=${employee.id}&employeeName=${encodeURIComponent(employee.name)}&site=${encodeURIComponent(document.getElementById('advanceSite').value)}&amount=${document.getElementById('advanceAmount').value}&notes=${encodeURIComponent(document.getElementById('advanceNotes').value)}`;
             
             try {
                 const response = await fetch(url);
@@ -205,7 +251,7 @@ console.log("Password exists:", currentUser.password ? "YES" : "NO");  // ← Ad
                 msgDiv.textContent = result.message;
                 if (result.success) {
                     document.getElementById('advanceForm').reset();
-                    alert('Advance added! Check Google Sheet.');
+                    alert('✓ Advance added successfully!');
                 }
                 setTimeout(() => msgDiv.className = 'message', 3000);
             } catch (error) {
@@ -218,7 +264,12 @@ console.log("Password exists:", currentUser.password ? "YES" : "NO");  // ← Ad
         document.getElementById('expenseForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const employee = employees.find(e => e.id == document.getElementById('expenseEmployeeId').value);
-            const url = `${APPS_SCRIPT_URL}?action=addExpense&username=${currentUser.username}&password=${currentUser.password}&employeeId=${employee?.id}&employeeName=${employee?.name}&site=${document.getElementById('expenseSite').value}&amount=${document.getElementById('expenseAmount').value}&notes=${document.getElementById('expenseNotes').value}`;
+            if (!employee) {
+                alert("Please select an employee");
+                return;
+            }
+            
+            const url = `${APPS_SCRIPT_URL}?action=addExpense&username=${currentUser.username}&password=${currentUser.password}&employeeId=${employee.id}&employeeName=${encodeURIComponent(employee.name)}&site=${encodeURIComponent(document.getElementById('expenseSite').value)}&amount=${document.getElementById('expenseAmount').value}&notes=${encodeURIComponent(document.getElementById('expenseNotes').value)}`;
             
             try {
                 const response = await fetch(url);
@@ -228,7 +279,7 @@ console.log("Password exists:", currentUser.password ? "YES" : "NO");  // ← Ad
                 msgDiv.textContent = result.message;
                 if (result.success) {
                     document.getElementById('expenseForm').reset();
-                    alert('Expense added! Check Google Sheet.');
+                    alert('✓ Expense added successfully!');
                 }
                 setTimeout(() => msgDiv.className = 'message', 3000);
             } catch (error) {
@@ -240,7 +291,7 @@ console.log("Password exists:", currentUser.password ? "YES" : "NO");  // ← Ad
         // Add Employee
         document.getElementById('employeeForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const url = `${APPS_SCRIPT_URL}?action=addEmployee&username=${currentUser.username}&password=${currentUser.password}&name=${document.getElementById('employeeName').value}&iqamaNo=${document.getElementById('employeeIqama').value}&site=${document.getElementById('employeeSite').value}&salary=${document.getElementById('employeeSalary').value}`;
+            const url = `${APPS_SCRIPT_URL}?action=addEmployee&username=${currentUser.username}&password=${currentUser.password}&name=${encodeURIComponent(document.getElementById('employeeName').value)}&iqamaNo=${encodeURIComponent(document.getElementById('employeeIqama').value)}&site=${encodeURIComponent(document.getElementById('employeeSite').value)}&salary=${document.getElementById('employeeSalary').value}`;
             
             try {
                 const response = await fetch(url);
@@ -250,8 +301,8 @@ console.log("Password exists:", currentUser.password ? "YES" : "NO");  // ← Ad
                 msgDiv.textContent = result.message;
                 if (result.success) {
                     document.getElementById('employeeForm').reset();
+                    alert('✓ Employee added successfully!');
                     loadEmployees();
-                    alert('Employee added!');
                 }
                 setTimeout(() => msgDiv.className = 'message', 3000);
             } catch (error) {
@@ -263,12 +314,17 @@ console.log("Password exists:", currentUser.password ? "YES" : "NO");  // ← Ad
         function showTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.getElementById(`tab-${tabName}`).classList.add('active');
+            const target = document.getElementById(`tab-${tabName}`);
+            if (target) target.classList.add('active');
             if (event && event.target) event.target.classList.add('active');
         }
         
-        function logout() { localStorage.removeItem('user'); window.location.href = 'index.html'; }
+        function logout() { 
+            localStorage.removeItem('user'); 
+            window.location.href = 'index.html'; 
+        }
         
+        // Initialize
         loadEmployees();
         loadSites();
         loadDashboard();
