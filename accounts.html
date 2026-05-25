@@ -7,178 +7,32 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1976D2">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f5f5f5;
-            padding: 20px;
-            padding-bottom: 80px;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .header h1 {
-            font-size: 20px;
-        }
-        
-        .logout-btn {
-            background: rgba(255,255,255,0.2);
-            border: none;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        
-        .card {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-        
-        .card h3 {
-            color: #333;
-            margin-bottom: 15px;
-            border-left: 4px solid #667eea;
-            padding-left: 12px;
-        }
-        
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #555;
-            font-size: 14px;
-            font-weight: 500;
-        }
-        
-        select, input {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-        
-        select:focus, input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        
-        button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-        }
-        
-        button.danger {
-            background: linear-gradient(135deg, #e53935 0%, #c62828 100%);
-        }
-        
-        .message {
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 15px;
-            display: none;
-        }
-        
-        .message.success {
-            background: #d4edda;
-            color: #155724;
-            display: block;
-        }
-        
-        .message.error {
-            background: #f8d7da;
-            color: #721c24;
-            display: block;
-        }
-        
-        .tab-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            display: flex;
-            border-top: 1px solid #e0e0e0;
-            flex-wrap: wrap;
-        }
-        
-        .tab {
-            flex: 1;
-            text-align: center;
-            padding: 10px;
-            background: none;
-            border: none;
-            font-size: 11px;
-            color: #666;
-            cursor: pointer;
-        }
-        
-        .tab.active {
-            color: #667eea;
-            border-top: 3px solid #667eea;
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        .dues-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        
-        .loading-text {
-            text-align: center;
-            padding: 20px;
-            color: #667eea;
-        }
-        
-        .error-text {
-            text-align: center;
-            padding: 20px;
-            color: #e53935;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; padding: 20px; padding-bottom: 80px; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { font-size: 20px; }
+        .logout-btn { background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 15px; border-radius: 8px; cursor: pointer; }
+        .card { background: white; border-radius: 15px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .card h3 { color: #333; margin-bottom: 15px; border-left: 4px solid #667eea; padding-left: 12px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; color: #555; font-size: 14px; font-weight: 500; }
+        select, input { width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; }
+        button { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; width: 100%; }
+        .message { padding: 10px; border-radius: 8px; margin-top: 15px; display: none; }
+        .message.success { background: #d4edda; color: #155724; display: block; }
+        .message.error { background: #f8d7da; color: #721c24; display: block; }
+        .tab-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; border-top: 1px solid #e0e0e0; flex-wrap: wrap; }
+        .tab { flex: 1; text-align: center; padding: 10px; background: none; border: none; font-size: 11px; color: #666; cursor: pointer; }
+        .tab.active { color: #667eea; border-top: 3px solid #667eea; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .dues-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #e0e0e0; }
+        .loading-text { text-align: center; padding: 20px; color: #667eea; }
     </style>
 </head>
 <body>
     <div class="header">
-        <div>
-            <h1>Accounts Dashboard</h1>
-        </div>
+        <div><h1>Accounts Dashboard</h1></div>
         <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
     
@@ -186,38 +40,27 @@
         <button class="tab active" onclick="showTab('dashboard')">Dashboard</button>
         <button class="tab" onclick="showTab('advance')">Add Advance</button>
         <button class="tab" onclick="showTab('expense')">Add Expense</button>
-        <button class="tab" onclick="showTab('salary')">Salary</button>
         <button class="tab" onclick="showTab('employee')">Add Employee</button>
-        <button class="tab" onclick="showTab('monthend')">Month End</button>
     </div>
     
-    <!-- Dashboard Tab -->
     <div id="tab-dashboard" class="tab-content active">
         <div class="card">
             <h3>Outstanding Dues</h3>
-            <div id="outstandingList">
-                <div class="loading-text">Loading...</div>
-            </div>
-            <button onclick="exportToCSV()" style="margin-top: 10px; background: #4caf50;">Export to CSV</button>
+            <div id="outstandingList"><div class="loading-text">Loading...</div></div>
         </div>
     </div>
     
-    <!-- Add Advance Tab -->
     <div id="tab-advance" class="tab-content">
         <div class="card">
             <h3>Add Advance Payment</h3>
             <form id="advanceForm">
                 <div class="form-group">
                     <label>Select Employee</label>
-                    <select id="advanceEmployeeId" required>
-                        <option value="">Loading employees...</option>
-                    </select>
+                    <select id="advanceEmployeeId" required><option>Loading...</option></select>
                 </div>
                 <div class="form-group">
                     <label>Site</label>
-                    <select id="advanceSite" required>
-                        <option value="">Loading sites...</option>
-                    </select>
+                    <select id="advanceSite" required><option>Loading...</option></select>
                 </div>
                 <div class="form-group">
                     <label>Amount (SAR)</label>
@@ -233,22 +76,17 @@
         </div>
     </div>
     
-    <!-- Add Expense Tab -->
     <div id="tab-expense" class="tab-content">
         <div class="card">
             <h3>Add Expense</h3>
             <form id="expenseForm">
                 <div class="form-group">
                     <label>Select Employee</label>
-                    <select id="expenseEmployeeId" required>
-                        <option value="">Loading employees...</option>
-                    </select>
+                    <select id="expenseEmployeeId" required><option>Loading...</option></select>
                 </div>
                 <div class="form-group">
                     <label>Site</label>
-                    <select id="expenseSite" required>
-                        <option value="">Loading sites...</option>
-                    </select>
+                    <select id="expenseSite" required><option>Loading...</option></select>
                 </div>
                 <div class="form-group">
                     <label>Amount (SAR)</label>
@@ -264,34 +102,6 @@
         </div>
     </div>
     
-    <!-- Salary Payment Tab -->
-    <div id="tab-salary" class="tab-content">
-        <div class="card">
-            <h3>Process Salary Payment</h3>
-            <form id="salaryForm">
-                <div class="form-group">
-                    <label>Select Employee</label>
-                    <select id="salaryEmployeeId" required>
-                        <option value="">Loading employees...</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Site</label>
-                    <select id="salarySite" required>
-                        <option value="">Loading sites...</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Amount Paid (SAR)</label>
-                    <input type="number" id="salaryAmount" required min="0">
-                </div>
-                <button type="submit">Record Salary Payment</button>
-            </form>
-            <div id="salaryMessage" class="message"></div>
-        </div>
-    </div>
-    
-    <!-- Add Employee Tab -->
     <div id="tab-employee" class="tab-content">
         <div class="card">
             <h3>Add New Employee</h3>
@@ -306,9 +116,7 @@
                 </div>
                 <div class="form-group">
                     <label>Site</label>
-                    <select id="employeeSite" required>
-                        <option value="">Loading sites...</option>
-                    </select>
+                    <select id="employeeSite" required><option>Loading...</option></select>
                 </div>
                 <div class="form-group">
                     <label>Monthly Salary (SAR)</label>
@@ -320,459 +128,147 @@
         </div>
     </div>
     
-    <!-- Month End Tab -->
-    <div id="tab-monthend" class="tab-content">
-        <div class="card">
-            <h3>Month End Processing</h3>
-            <p style="margin-bottom: 15px; color: #666;">Running month-end will:</p>
-            <ul style="margin-left: 20px; margin-bottom: 20px; color: #666;">
-                <li>Calculate final dues for all employees</li>
-                <li>Archive current month data</li>
-                <li>Clear current month for next period</li>
-                <li>Update carried over dues</li>
-            </ul>
-            <button id="runMonthEndBtn" class="danger" onclick="runMonthEnd()">Run Month End Process</button>
-            <div id="monthEndMessage" class="message"></div>
-        </div>
-    </div>
-    
     <script>
-        // === YOUR APPS SCRIPT URL ===
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6hTdcE5hP6GcMZm3c2Iu4larvrmyozW_R1FlG-SoJBsSarXYhXGr-Br3K7dIZk6VQ/exec';
         
         let currentUser = null;
         let employees = [];
-        let sites = ['Riyadh', 'Jeddah', 'Dammam']; // Default sites if API fails
         
-        // Check if user is logged in
         const userStr = localStorage.getItem('user');
-        if (!userStr) {
-            window.location.href = 'index.html';
-        }
-        
-        try {
-            currentUser = JSON.parse(userStr);
-            console.log("Logged in as:", currentUser);
-        } catch(e) {
-            console.error("Failed to parse user:", e);
-            window.location.href = 'index.html';
-        }
-        
-        // Load all data when page loads
-        async function loadAllData() {
-            await loadEmployees();
-            await loadSites();
-            await loadDashboard();
-        }
+        if (!userStr) window.location.href = 'index.html';
+        currentUser = JSON.parse(userStr);
+        console.log("User:", currentUser);
         
         async function loadEmployees() {
-            try {
-                if (!currentUser || !currentUser.password) {
-                    console.error("No password found in user object");
-                    return;
-                }
-                
-                const url = `${APPS_SCRIPT_URL}?action=getEmployees&username=${encodeURIComponent(currentUser.username)}&password=${encodeURIComponent(currentUser.password)}`;
-                console.log("Fetching employees from:", url);
-                
-                const response = await fetch(url);
-                const data = await response.json();
-                console.log("Employees response:", data);
-                
-                if (data.success && data.employees) {
-                    employees = data.employees;
-                    populateEmployeeDropdowns();
-                } else {
-                    console.error("Failed to load employees:", data);
-                    // Try to get from sheet directly? For now, use empty array
-                    employees = [];
-                    populateEmployeeDropdowns();
-                }
-            } catch (error) {
-                console.error("Error loading employees:", error);
-                employees = [];
-                populateEmployeeDropdowns();
-            }
-        }
-        
-        function populateEmployeeDropdowns() {
-            const dropdowns = ['advanceEmployeeId', 'expenseEmployeeId', 'salaryEmployeeId'];
-            
-            dropdowns.forEach(id => {
-                const select = document.getElementById(id);
-                if (select) {
-                    select.innerHTML = '<option value="">Select Employee</option>';
-                    if (employees.length === 0) {
-                        select.innerHTML = '<option value="">No employees found</option>';
-                    } else {
+            const url = `${APPS_SCRIPT_URL}?action=getEmployees&username=${currentUser.username}&password=${currentUser.password}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data.success) {
+                employees = data.employees;
+                const dropdowns = ['advanceEmployeeId', 'expenseEmployeeId'];
+                dropdowns.forEach(id => {
+                    const select = document.getElementById(id);
+                    if (select) {
+                        select.innerHTML = '<option value="">Select Employee</option>';
                         employees.forEach(emp => {
-                            const option = document.createElement('option');
-                            option.value = emp.id;
-                            option.textContent = `${emp.name} - ${emp.site} - ${emp.salary} SAR`;
-                            select.appendChild(option);
+                            select.innerHTML += `<option value="${emp.id}">${emp.name} (${emp.site}) - ${emp.salary} SAR</option>`;
                         });
                     }
-                }
-            });
+                });
+            }
         }
         
         async function loadSites() {
-            try {
-                const url = `${APPS_SCRIPT_URL}?action=getSites`;
-                console.log("Fetching sites from:", url);
-                
-                const response = await fetch(url);
-                const data = await response.json();
-                console.log("Sites response:", data);
-                
-                if (data.success && data.sites && data.sites.length > 0) {
-                    sites = data.sites;
-                }
-            } catch (error) {
-                console.error("Error loading sites, using defaults:", error);
-                // Keep default sites
-            }
-            
-            // Populate site dropdowns with whatever we have
-            const siteSelects = ['advanceSite', 'expenseSite', 'salarySite', 'employeeSite'];
+            const url = `${APPS_SCRIPT_URL}?action=getSites`;
+            const response = await fetch(url);
+            const data = await response.json();
+            const sites = data.success && data.sites ? data.sites : ['Riyadh', 'Jeddah', 'Dammam'];
+            const siteSelects = ['advanceSite', 'expenseSite', 'employeeSite'];
             siteSelects.forEach(id => {
                 const select = document.getElementById(id);
                 if (select) {
                     select.innerHTML = '<option value="">Select Site</option>';
                     sites.forEach(site => {
-                        const option = document.createElement('option');
-                        option.value = site;
-                        option.textContent = site;
-                        select.appendChild(option);
+                        select.innerHTML += `<option value="${site}">${site}</option>`;
                     });
                 }
             });
         }
         
         async function loadDashboard() {
+            const url = `${APPS_SCRIPT_URL}?action=getDashboardData&username=${currentUser.username}&password=${currentUser.password}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            const container = document.getElementById('outstandingList');
+            if (data.success && data.outstandingEmployees && data.outstandingEmployees.length > 0) {
+                container.innerHTML = data.outstandingEmployees.map(emp => 
+                    `<div class="dues-item"><span><strong>${emp.name}</strong> (${emp.site})</span><span>${emp.dues} SAR</span></div>`
+                ).join('');
+            } else {
+                container.innerHTML = '<p>No outstanding dues</p>';
+            }
+        }
+        
+        // Add Advance - Using GET
+        document.getElementById('advanceForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const employee = employees.find(e => e.id == document.getElementById('advanceEmployeeId').value);
+            const url = `${APPS_SCRIPT_URL}?action=addAdvance&username=${currentUser.username}&password=${currentUser.password}&employeeId=${employee?.id}&employeeName=${employee?.name}&site=${document.getElementById('advanceSite').value}&amount=${document.getElementById('advanceAmount').value}&notes=${document.getElementById('advanceNotes').value}`;
+            
             try {
-                if (!currentUser || !currentUser.password) {
-                    console.error("No password found");
-                    return;
-                }
-                
-                const url = `${APPS_SCRIPT_URL}?action=getDashboardData&username=${encodeURIComponent(currentUser.username)}&password=${encodeURIComponent(currentUser.password)}`;
-                console.log("Fetching dashboard from:", url);
-                
                 const response = await fetch(url);
-                const data = await response.json();
-                console.log("Dashboard response:", data);
-                
-                const container = document.getElementById('outstandingList');
-                if (data.success && data.outstandingEmployees && data.outstandingEmployees.length > 0) {
-                    container.innerHTML = data.outstandingEmployees.map(emp => `
-                        <div class="dues-item">
-                            <span><strong>${emp.name}</strong> (${emp.site})</span>
-                            <span style="color: #e53935;">${emp.dues} SAR</span>
-                        </div>
-                    `).join('');
-                } else {
-                    container.innerHTML = '<p>No outstanding dues</p>';
+                const result = await response.json();
+                const msgDiv = document.getElementById('advanceMessage');
+                msgDiv.className = result.success ? 'message success' : 'message error';
+                msgDiv.textContent = result.message;
+                if (result.success) {
+                    document.getElementById('advanceForm').reset();
+                    loadDashboard();
                 }
+                setTimeout(() => msgDiv.className = 'message', 3000);
             } catch (error) {
-                console.error("Error loading dashboard:", error);
-                document.getElementById('outstandingList').innerHTML = '<p class="error-text">Error loading data</p>';
+                document.getElementById('advanceMessage').className = 'message error';
+                document.getElementById('advanceMessage').textContent = 'Error: ' + error.message;
             }
-        }
+        });
         
-        // Add Advance Form
-        const advanceForm = document.getElementById('advanceForm');
-        if (advanceForm) {
-            advanceForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                
-                const employeeId = document.getElementById('advanceEmployeeId').value;
-                const employee = employees.find(e => e.id == employeeId);
-                
-                const data = {
-                    action: 'addAdvance',
-                    username: currentUser.username,
-                    password: currentUser.password,
-                    employeeId: employeeId,
-                    employeeName: employee?.name,
-                    site: document.getElementById('advanceSite').value,
-                    amount: parseFloat(document.getElementById('advanceAmount').value),
-                    notes: document.getElementById('advanceNotes').value
-                };
-                
-                try {
-                    const response = await fetch(APPS_SCRIPT_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(data)
-                    });
-                    const result = await response.json();
-                    
-                    const msgDiv = document.getElementById('advanceMessage');
-                    if (result.success) {
-                        msgDiv.className = 'message success';
-                        msgDiv.textContent = result.message;
-                        advanceForm.reset();
-                        alert('Advance added successfully!');
-                    } else {
-                        msgDiv.className = 'message error';
-                        msgDiv.textContent = result.message;
-                    }
-                    
-                    setTimeout(() => {
-                        msgDiv.className = 'message';
-                    }, 3000);
-                } catch (error) {
-                    console.error("Error:", error);
-                    const msgDiv = document.getElementById('advanceMessage');
-                    msgDiv.className = 'message error';
-                    msgDiv.textContent = 'Network error: ' + error.message;
-                }
-            });
-        }
-        
-        // Add Expense Form
-        const expenseForm = document.getElementById('expenseForm');
-        if (expenseForm) {
-            expenseForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                
-                const employeeId = document.getElementById('expenseEmployeeId').value;
-                const employee = employees.find(e => e.id == employeeId);
-                
-                const data = {
-                    action: 'addExpense',
-                    username: currentUser.username,
-                    password: currentUser.password,
-                    employeeId: employeeId,
-                    employeeName: employee?.name,
-                    site: document.getElementById('expenseSite').value,
-                    amount: parseFloat(document.getElementById('expenseAmount').value),
-                    notes: document.getElementById('expenseNotes').value
-                };
-                
-                try {
-                    const response = await fetch(APPS_SCRIPT_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(data)
-                    });
-                    const result = await response.json();
-                    
-                    const msgDiv = document.getElementById('expenseMessage');
-                    if (result.success) {
-                        msgDiv.className = 'message success';
-                        msgDiv.textContent = result.message;
-                        expenseForm.reset();
-                        alert('Expense added successfully!');
-                    } else {
-                        msgDiv.className = 'message error';
-                        msgDiv.textContent = result.message;
-                    }
-                    
-                    setTimeout(() => {
-                        msgDiv.className = 'message';
-                    }, 3000);
-                } catch (error) {
-                    console.error("Error:", error);
-                    const msgDiv = document.getElementById('expenseMessage');
-                    msgDiv.className = 'message error';
-                    msgDiv.textContent = 'Network error: ' + error.message;
-                }
-            });
-        }
-        
-        // Salary Payment Form
-        const salaryForm = document.getElementById('salaryForm');
-        if (salaryForm) {
-            salaryForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                
-                const employeeId = document.getElementById('salaryEmployeeId').value;
-                const employee = employees.find(e => e.id == employeeId);
-                
-                const data = {
-                    action: 'addSalaryPayment',
-                    username: currentUser.username,
-                    password: currentUser.password,
-                    employeeId: employeeId,
-                    employeeName: employee?.name,
-                    site: document.getElementById('salarySite').value,
-                    amountPaid: parseFloat(document.getElementById('salaryAmount').value),
-                    duesBefore: 0
-                };
-                
-                try {
-                    const response = await fetch(APPS_SCRIPT_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(data)
-                    });
-                    const result = await response.json();
-                    
-                    const msgDiv = document.getElementById('salaryMessage');
-                    if (result.success) {
-                        msgDiv.className = 'message success';
-                        msgDiv.textContent = result.message;
-                        salaryForm.reset();
-                        alert('Salary payment recorded!');
-                    } else {
-                        msgDiv.className = 'message error';
-                        msgDiv.textContent = result.message;
-                    }
-                    
-                    setTimeout(() => {
-                        msgDiv.className = 'message';
-                    }, 3000);
-                } catch (error) {
-                    console.error("Error:", error);
-                    const msgDiv = document.getElementById('salaryMessage');
-                    msgDiv.className = 'message error';
-                    msgDiv.textContent = 'Network error: ' + error.message;
-                }
-            });
-        }
-        
-        // Add Employee Form
-        const employeeForm = document.getElementById('employeeForm');
-        if (employeeForm) {
-            employeeForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                
-                const data = {
-                    action: 'addEmployee',
-                    username: currentUser.username,
-                    password: currentUser.password,
-                    name: document.getElementById('employeeName').value,
-                    iqamaNo: document.getElementById('employeeIqama').value,
-                    site: document.getElementById('employeeSite').value,
-                    salary: parseFloat(document.getElementById('employeeSalary').value)
-                };
-                
-                try {
-                    const response = await fetch(APPS_SCRIPT_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(data)
-                    });
-                    const result = await response.json();
-                    
-                    const msgDiv = document.getElementById('employeeMessage');
-                    if (result.success) {
-                        msgDiv.className = 'message success';
-                        msgDiv.textContent = `${result.message}. Employee ID: ${result.employeeId}`;
-                        employeeForm.reset();
-                        alert('Employee added!');
-                        loadEmployees(); // Reload employee list
-                    } else {
-                        msgDiv.className = 'message error';
-                        msgDiv.textContent = result.message;
-                    }
-                    
-                    setTimeout(() => {
-                        msgDiv.className = 'message';
-                    }, 3000);
-                } catch (error) {
-                    console.error("Error:", error);
-                    const msgDiv = document.getElementById('employeeMessage');
-                    msgDiv.className = 'message error';
-                    msgDiv.textContent = 'Network error: ' + error.message;
-                }
-            });
-        }
-        
-        async function runMonthEnd() {
-            if (!confirm('WARNING: This will close the current month and archive all data. Are you sure?')) {
-                return;
-            }
-            
-            const data = {
-                action: 'runMonthEnd',
-                username: currentUser.username,
-                password: currentUser.password
-            };
+        // Add Expense - Using GET
+        document.getElementById('expenseForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const employee = employees.find(e => e.id == document.getElementById('expenseEmployeeId').value);
+            const url = `${APPS_SCRIPT_URL}?action=addExpense&username=${currentUser.username}&password=${currentUser.password}&employeeId=${employee?.id}&employeeName=${employee?.name}&site=${document.getElementById('expenseSite').value}&amount=${document.getElementById('expenseAmount').value}&notes=${document.getElementById('expenseNotes').value}`;
             
             try {
-                const response = await fetch(APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                });
+                const response = await fetch(url);
                 const result = await response.json();
-                
-                const msgDiv = document.getElementById('monthEndMessage');
+                const msgDiv = document.getElementById('expenseMessage');
+                msgDiv.className = result.success ? 'message success' : 'message error';
+                msgDiv.textContent = result.message;
                 if (result.success) {
-                    msgDiv.className = 'message success';
-                    msgDiv.textContent = result.message;
-                    alert('Month end processed successfully!');
-                } else {
-                    msgDiv.className = 'message error';
-                    msgDiv.textContent = result.message;
+                    document.getElementById('expenseForm').reset();
+                    loadDashboard();
                 }
-                
-                setTimeout(() => {
-                    msgDiv.className = 'message';
-                }, 3000);
+                setTimeout(() => msgDiv.className = 'message', 3000);
             } catch (error) {
-                console.error("Error:", error);
-                const msgDiv = document.getElementById('monthEndMessage');
-                msgDiv.className = 'message error';
-                msgDiv.textContent = 'Network error: ' + error.message;
+                document.getElementById('expenseMessage').className = 'message error';
+                document.getElementById('expenseMessage').textContent = 'Error: ' + error.message;
             }
-        }
+        });
         
-        function exportToCSV() {
-            const outstanding = document.querySelectorAll('.dues-item');
-            let csv = 'Employee,Site,Dues (SAR)\n';
-            outstanding.forEach(item => {
-                const text = item.innerText;
-                const parts = text.split('SAR');
-                csv += `${parts[0].trim()},${parts[1] || ''}\n`;
-            });
+        // Add Employee - Using GET
+        document.getElementById('employeeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const url = `${APPS_SCRIPT_URL}?action=addEmployee&username=${currentUser.username}&password=${currentUser.password}&name=${document.getElementById('employeeName').value}&iqamaNo=${document.getElementById('employeeIqama').value}&site=${document.getElementById('employeeSite').value}&salary=${document.getElementById('employeeSalary').value}`;
             
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `outstanding_dues_${new Date().toISOString().split('T')[0]}.csv`;
-            a.click();
-            URL.revokeObjectURL(url);
-        }
+            try {
+                const response = await fetch(url);
+                const result = await response.json();
+                const msgDiv = document.getElementById('employeeMessage');
+                msgDiv.className = result.success ? 'message success' : 'message error';
+                msgDiv.textContent = result.message;
+                if (result.success) {
+                    document.getElementById('employeeForm').reset();
+                    loadEmployees();
+                }
+                setTimeout(() => msgDiv.className = 'message', 3000);
+            } catch (error) {
+                document.getElementById('employeeMessage').className = 'message error';
+                document.getElementById('employeeMessage').textContent = 'Error: ' + error.message;
+            }
+        });
         
         function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            const targetTab = document.getElementById(`tab-${tabName}`);
-            if (targetTab) {
-                targetTab.classList.add('active');
-            }
-            if (event && event.target) {
-                event.target.classList.add('active');
-            }
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            if (event && event.target) event.target.classList.add('active');
         }
         
-        function logout() {
-            localStorage.removeItem('user');
-            window.location.href = 'index.html';
-        }
+        function logout() { localStorage.removeItem('user'); window.location.href = 'index.html'; }
         
-        // Start loading data
-        loadAllData();
+        loadEmployees();
+        loadSites();
+        loadDashboard();
     </script>
 </body>
 </html>
