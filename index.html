@@ -148,9 +148,9 @@
         </div>
     </div>
     
-    <script>
-        // CONFIGURATION - PASTE YOUR APPS SCRIPT URL HERE
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+      <script>
+        // === YOUR APPS SCRIPT URL ===
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6hTdcE5hP6GcMZm3c2Iu4larvrmyozW_R1FlG-SoJBsSarXYhXGr-Br3K7dIZk6VQ/exec';
         
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -162,11 +162,15 @@
             document.getElementById('error').style.display = 'none';
             
             try {
-                const response = await fetch(`${APPS_SCRIPT_URL}?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`);
+                // Use GET request (same as working direct URL)
+                const loginUrl = `${APPS_SCRIPT_URL}?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
+                console.log("Login URL:", loginUrl);
+                
+                const response = await fetch(loginUrl);
                 const data = await response.json();
+                console.log("Response:", data);
                 
                 if (data.success) {
-                    // Store user data
                     localStorage.setItem('user', JSON.stringify(data.user));
                     
                     // Redirect based on role
@@ -182,21 +186,13 @@
                     document.getElementById('error').style.display = 'block';
                 }
             } catch (error) {
-                document.getElementById('error').textContent = 'Network error. Please try again.';
+                console.error("Error:", error);
+                document.getElementById('error').textContent = 'Network error: ' + error.message;
                 document.getElementById('error').style.display = 'block';
             } finally {
                 document.getElementById('loading').style.display = 'none';
             }
         });
-        
-        // Load company settings
-        async function loadSettings() {
-            // You can fetch settings from Apps Script if needed
-            const companyName = localStorage.getItem('companyName') || 'Employee Advance Tracker';
-            document.getElementById('companyName').textContent = companyName;
-        }
-        
-        loadSettings();
     </script>
 </body>
 </html>
