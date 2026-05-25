@@ -199,12 +199,18 @@
         .tab-content.active {
             display: block;
         }
+        
+        .loading-spinner {
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+        }
     </style>
 </head>
 <body>
     <div class="header">
         <div>
-            <h1 id="companyName">Advance Tracker</h1>
+            <h1 id="companyName">Site Head Dashboard</h1>
             <div class="site-badge" id="siteBadge">Site: Loading...</div>
         </div>
         <button class="logout-btn" onclick="logout()">Logout</button>
@@ -225,7 +231,7 @@
                 <div class="form-group">
                     <label>Select Employee</label>
                     <select id="advanceEmployeeId" required>
-                        <option value="">Loading...</option>
+                        <option value="">Loading employees...</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -250,7 +256,7 @@
                 <div class="form-group">
                     <label>Select Employee</label>
                     <select id="salaryEmployeeId" required>
-                        <option value="">Loading...</option>
+                        <option value="">Loading employees...</option>
                     </select>
                 </div>
                 <div id="duesInfo" class="info-box" style="display:none;">
@@ -309,7 +315,7 @@
                 <div class="form-group">
                     <label>Site</label>
                     <select id="employeeSite" required>
-                        <option value="">Loading...</option>
+                        <option value="">Loading sites...</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -329,7 +335,7 @@
             <div class="form-group">
                 <label>Select Employee</label>
                 <select id="duesEmployeeId">
-                    <option value="">Loading...</option>
+                    <option value="">Loading employees...</option>
                 </select>
             </div>
             <div id="duesView" class="info-box" style="display:none;">
@@ -362,31 +368,49 @@
     </div>
     
     <script>
+        // === YOUR APPS SCRIPT URL ===
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6hTdcE5hP6GcMZm3c2Iu4larvrmyozW_R1FlG-SoJBsSarXYhXGr-Br3K7dIZk6VQ/exec';
         
         let currentUser = null;
         let employees = [];
+        let sites = [];
         
-        // Load user data
+        // Check if user is logged in
         const userStr = localStorage.getItem('user');
         if (!userStr) {
             window.location.href = 'index.html';
         }
         currentUser = JSON.parse(userStr);
+        console.log("Site Head logged in as:", currentUser);
         
         document.getElementById('siteBadge').textContent = `Site: ${currentUser.site}`;
         
-        // Load employees on page load
-        loadEmployees();
-        loadSites();
+        // Load all data when page loads
+        async function loadAllData() {
+            await loadEmployees();
+            await loadSites();
+        }
         
         async function loadEmployees() {
-            const response = await fetch(`${APPS_SCRIPT_URL}?action=getEmployees&username=${currentUser.username}&password=${currentUser.password}`);
-            const data = await response.json();
-            
-            if (data.success) {
-                employees = data.employees;
-                populateEmployeeDropdowns();
+            try {
+                const url = `${APPS_SCRIPT_URL}?action=getEmployees&username=${currentUser.username}&password=${currentUser.password}`;
+                console.log("Fetching employees from:", url);
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                console.log("Employees response:", data);
+                
+                if (data.success) {
+                    employees = data.employees;
+                    populateEmployeeDropdowns();
+                    return true;
+                } else {
+                    console.error("Failed to load employees:", data.message);
+                    return false;
+                }
+            } catch (error) {
+                console.error("Error loading employees:", error);
+                return false;
             }
         }
         
@@ -395,30 +419,47 @@
             
             dropdowns.forEach(id => {
                 const select = document.getElementById(id);
-                select.innerHTML = '<option value="">Select Employee</option>';
-                
-                employees.forEach(emp => {
-                    const option = document.createElement('option');
-                    option.value = emp.id;
-                    option.textContent = `${emp.name} (${emp.site}) - Salary: ${emp.salary}`;
-                    select.appendChild(option);
-                });
+                if (select) {
+                    select.innerHTML = '<option value="">Select Employee</option>';
+                    employees.forEach(emp => {
+                        const option = document.createElement('option');
+                        option.value = emp.id;
+                        option.textContent = `${emp.name} (${emp.site}) - Salary: ${emp.salary}`;
+                        select.appendChild(option);
+                    });
+                }
             });
         }
         
         async function loadSites() {
-            const response = await fetch(`${APPS_SCRIPT_URL}?action=getSites`);
-            const data = await response.json();
-            
-            if (data.success) {
-                const siteSelect = document.getElementById('employeeSite');
-                siteSelect.innerHTML = '<option value="">Select Site</option>';
-                data.sites.forEach(site => {
-                    const option = document.createElement('option');
-                    option.value = site;
-                    option.textContent = site;
-                    siteSelect.appendChild(option);
-                });
+            try {
+                const url = `${APPS_SCRIPT_URL}?action=getSites`;
+                console.log("Fetching sites from:", url);
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                console.log("Sites response:", data);
+                
+                if (data.success) {
+                    sites = data.sites;
+                    const siteSelect = document.getElementById('employeeSite');
+                    if (siteSelect) {
+                        siteSelect.innerHTML = '<option value="">Select Site</option>';
+                        sites.forEach(site => {
+                            const option = document.createElement('option');
+                            option.value = site;
+                            option.textContent = site;
+                            siteSelect.appendChild(option);
+                        });
+                    }
+                    return true;
+                } else {
+                    console.error("Failed to load sites");
+                    return false;
+                }
+            } catch (error) {
+                console.error("Error loading sites:", error);
+                return false;
             }
         }
         
@@ -430,26 +471,36 @@
                 return;
             }
             
-            const response = await fetch(`${APPS_SCRIPT_URL}?action=getDues&employeeId=${employeeId}&username=${currentUser.username}&password=${currentUser.password}`);
-            const data = await response.json();
-            
-            if (data.success) {
-                document.getElementById('displaySalary').textContent = `${data.salary} SAR`;
-                document.getElementById('displayAdvances').textContent = `${data.advancesThisMonth} SAR`;
-                document.getElementById('displayExpenses').textContent = `${data.expensesThisMonth} SAR`;
-                document.getElementById('displaySalaryPaid').textContent = `${data.salaryPaidThisMonth} SAR`;
-                document.getElementById('displayCarriedOver').textContent = `${data.carriedOverDues} SAR`;
+            try {
+                const url = `${APPS_SCRIPT_URL}?action=getDues&employeeId=${employeeId}&username=${currentUser.username}&password=${currentUser.password}`;
+                console.log("Fetching dues from:", url);
                 
-                const totalDuesElem = document.getElementById('displayTotalDues');
-                totalDuesElem.textContent = `${data.totalDues} SAR`;
-                if (data.totalDues < 0) {
-                    totalDuesElem.className = 'dues-negative';
+                const response = await fetch(url);
+                const data = await response.json();
+                console.log("Dues response:", data);
+                
+                if (data.success) {
+                    document.getElementById('displaySalary').textContent = `${data.salary} SAR`;
+                    document.getElementById('displayAdvances').textContent = `${data.advancesThisMonth} SAR`;
+                    document.getElementById('displayExpenses').textContent = `${data.expensesThisMonth} SAR`;
+                    document.getElementById('displaySalaryPaid').textContent = `${data.salaryPaidThisMonth} SAR`;
+                    document.getElementById('displayCarriedOver').textContent = `${data.carriedOverDues} SAR`;
+                    
+                    const totalDuesElem = document.getElementById('displayTotalDues');
+                    totalDuesElem.textContent = `${data.totalDues} SAR`;
+                    if (data.totalDues < 0) {
+                        totalDuesElem.className = 'dues-negative';
+                    } else {
+                        totalDuesElem.className = 'dues-positive';
+                    }
+                    
+                    document.getElementById('displaySuggested').textContent = `${data.suggestedPayment} SAR`;
+                    document.getElementById('duesInfo').style.display = 'block';
                 } else {
-                    totalDuesElem.className = 'dues-positive';
+                    console.error("Failed to load dues:", data.message);
                 }
-                
-                document.getElementById('displaySuggested').textContent = `${data.suggestedPayment} SAR`;
-                document.getElementById('duesInfo').style.display = 'block';
+            } catch (error) {
+                console.error("Error loading dues:", error);
             }
         });
         
@@ -461,17 +512,22 @@
                 return;
             }
             
-            const response = await fetch(`${APPS_SCRIPT_URL}?action=getDues&employeeId=${employeeId}&username=${currentUser.username}&password=${currentUser.password}`);
-            const data = await response.json();
-            
-            if (data.success) {
-                document.getElementById('viewName').textContent = data.employeeName;
-                document.getElementById('viewSalary').textContent = `${data.salary} SAR`;
-                document.getElementById('viewAdvances').textContent = `${data.advancesThisMonth} SAR`;
-                document.getElementById('viewExpenses').textContent = `${data.expensesThisMonth} SAR`;
-                document.getElementById('viewCarriedOver').textContent = `${data.carriedOverDues} SAR`;
-                document.getElementById('viewTotalDues').textContent = `${data.totalDues} SAR`;
-                document.getElementById('duesView').style.display = 'block';
+            try {
+                const url = `${APPS_SCRIPT_URL}?action=getDues&employeeId=${employeeId}&username=${currentUser.username}&password=${currentUser.password}`;
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('viewName').textContent = data.employeeName;
+                    document.getElementById('viewSalary').textContent = `${data.salary} SAR`;
+                    document.getElementById('viewAdvances').textContent = `${data.advancesThisMonth} SAR`;
+                    document.getElementById('viewExpenses').textContent = `${data.expensesThisMonth} SAR`;
+                    document.getElementById('viewCarriedOver').textContent = `${data.carriedOverDues} SAR`;
+                    document.getElementById('viewTotalDues').textContent = `${data.totalDues} SAR`;
+                    document.getElementById('duesView').style.display = 'block';
+                }
+            } catch (error) {
+                console.error("Error viewing dues:", error);
             }
         });
         
@@ -479,46 +535,61 @@
         document.getElementById('advanceForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
+            const employeeId = document.getElementById('advanceEmployeeId').value;
+            const employee = employees.find(e => e.id == employeeId);
+            
             const data = {
                 action: 'addAdvance',
                 username: currentUser.username,
                 password: currentUser.password,
-                employeeId: document.getElementById('advanceEmployeeId').value,
-                employeeName: employees.find(e => e.id == document.getElementById('advanceEmployeeId').value)?.name,
+                employeeId: employeeId,
+                employeeName: employee?.name,
                 site: currentUser.site,
                 amount: parseFloat(document.getElementById('advanceAmount').value),
                 notes: document.getElementById('advanceNotes').value
             };
             
-            const response = await fetch(APPS_SCRIPT_URL, {
-                method: 'POST',
-                body: JSON.stringify(data)
-            });
-            const result = await response.json();
-            
-            const msgDiv = document.getElementById('advanceMessage');
-            if (result.success) {
-                msgDiv.className = 'message success';
-                msgDiv.textContent = result.message;
-                document.getElementById('advanceForm').reset();
-                loadEmployees();
-            } else {
+            try {
+                const response = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                
+                const msgDiv = document.getElementById('advanceMessage');
+                if (result.success) {
+                    msgDiv.className = 'message success';
+                    msgDiv.textContent = result.message;
+                    document.getElementById('advanceForm').reset();
+                } else {
+                    msgDiv.className = 'message error';
+                    msgDiv.textContent = result.message;
+                }
+                
+                setTimeout(() => {
+                    msgDiv.className = 'message';
+                }, 3000);
+            } catch (error) {
+                console.error("Error:", error);
+                const msgDiv = document.getElementById('advanceMessage');
                 msgDiv.className = 'message error';
-                msgDiv.textContent = result.message;
+                msgDiv.textContent = 'Network error: ' + error.message;
             }
-            
-            setTimeout(() => {
-                msgDiv.className = 'message';
-            }, 3000);
         });
         
         // Salary Payment Form
         document.getElementById('salaryForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            // Get current dues first
             const employeeId = document.getElementById('salaryEmployeeId').value;
-            const duesResponse = await fetch(`${APPS_SCRIPT_URL}?action=getDues&employeeId=${employeeId}&username=${currentUser.username}&password=${currentUser.password}`);
+            const employee = employees.find(e => e.id == employeeId);
+            
+            // Get current dues first
+            const duesUrl = `${APPS_SCRIPT_URL}?action=getDues&employeeId=${employeeId}&username=${currentUser.username}&password=${currentUser.password}`;
+            const duesResponse = await fetch(duesUrl);
             const duesData = await duesResponse.json();
             
             const data = {
@@ -526,33 +597,42 @@
                 username: currentUser.username,
                 password: currentUser.password,
                 employeeId: employeeId,
-                employeeName: employees.find(e => e.id == employeeId)?.name,
+                employeeName: employee?.name,
                 site: currentUser.site,
                 amountPaid: parseFloat(document.getElementById('salaryAmount').value),
-                duesBefore: duesData.totalDues
+                duesBefore: duesData.totalDues || 0
             };
             
-            const response = await fetch(APPS_SCRIPT_URL, {
-                method: 'POST',
-                body: JSON.stringify(data)
-            });
-            const result = await response.json();
-            
-            const msgDiv = document.getElementById('salaryMessage');
-            if (result.success) {
-                msgDiv.className = 'message success';
-                msgDiv.textContent = result.message;
-                document.getElementById('salaryForm').reset();
-                document.getElementById('duesInfo').style.display = 'none';
-                loadEmployees();
-            } else {
+            try {
+                const response = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                
+                const msgDiv = document.getElementById('salaryMessage');
+                if (result.success) {
+                    msgDiv.className = 'message success';
+                    msgDiv.textContent = result.message;
+                    document.getElementById('salaryForm').reset();
+                    document.getElementById('duesInfo').style.display = 'none';
+                } else {
+                    msgDiv.className = 'message error';
+                    msgDiv.textContent = result.message;
+                }
+                
+                setTimeout(() => {
+                    msgDiv.className = 'message';
+                }, 3000);
+            } catch (error) {
+                console.error("Error:", error);
+                const msgDiv = document.getElementById('salaryMessage');
                 msgDiv.className = 'message error';
-                msgDiv.textContent = result.message;
+                msgDiv.textContent = 'Network error: ' + error.message;
             }
-            
-            setTimeout(() => {
-                msgDiv.className = 'message';
-            }, 3000);
         });
         
         // Add Employee Form
@@ -569,26 +649,36 @@
                 salary: parseFloat(document.getElementById('employeeSalary').value)
             };
             
-            const response = await fetch(APPS_SCRIPT_URL, {
-                method: 'POST',
-                body: JSON.stringify(data)
-            });
-            const result = await response.json();
-            
-            const msgDiv = document.getElementById('employeeMessage');
-            if (result.success) {
-                msgDiv.className = 'message success';
-                msgDiv.textContent = `${result.message}. Employee ID: ${result.employeeId}`;
-                document.getElementById('employeeForm').reset();
-                loadEmployees();
-            } else {
+            try {
+                const response = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                
+                const msgDiv = document.getElementById('employeeMessage');
+                if (result.success) {
+                    msgDiv.className = 'message success';
+                    msgDiv.textContent = `${result.message}. Employee ID: ${result.employeeId}`;
+                    document.getElementById('employeeForm').reset();
+                    loadEmployees();
+                } else {
+                    msgDiv.className = 'message error';
+                    msgDiv.textContent = result.message;
+                }
+                
+                setTimeout(() => {
+                    msgDiv.className = 'message';
+                }, 3000);
+            } catch (error) {
+                console.error("Error:", error);
+                const msgDiv = document.getElementById('employeeMessage');
                 msgDiv.className = 'message error';
-                msgDiv.textContent = result.message;
+                msgDiv.textContent = 'Network error: ' + error.message;
             }
-            
-            setTimeout(() => {
-                msgDiv.className = 'message';
-            }, 3000);
         });
         
         function showTab(tabName) {
@@ -607,6 +697,9 @@
             localStorage.removeItem('user');
             window.location.href = 'index.html';
         }
+        
+        // Start loading data
+        loadAllData();
     </script>
 </body>
 </html>
