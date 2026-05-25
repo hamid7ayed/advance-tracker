@@ -1,0 +1,21 @@
+{
+  "name": "Employee Advance Tracker",
+  "short_name": "AdvanceTracker",
+  "description": "Track employee advances, expenses, and salary payments",
+  "start_url": "index.html",
+  "display": "standalone",
+  "theme_color": "#1976D2",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/192x192?text=AT",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://via.placeholder.com/512x512?text=AT",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

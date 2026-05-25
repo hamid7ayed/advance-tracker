@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Office Dashboard</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1976D2">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            font-size: 20px;
+        }
+        
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            padding-left: 12px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        select, input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        button:active {
+            transform: scale(0.98);
+        }
+        
+        .message {
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            display: block;
+        }
+        
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+        
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            border-top: 1px solid #e0e0e0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            background: none;
+            border: none;
+            font-size: 12px;
+            color: #666;
+            cursor: pointer;
+        }
+        
+        .tab.active {
+            color: #667eea;
+            border-top: 3px solid #667eea;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div>
+            <h1 id="companyName">Office Dashboard</h1>
+        </div>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+    
+    <div class="tab-bar">
+        <button class="tab active" onclick="showTab('advance')">Add Advance</button>
+        <button class="tab" onclick="showTab('expense')">Add Expense</button>
+        <button class="tab" onclick="showTab('employee')">Add Employee</button>
+    </div>
+    
+    <!-- Tab 1: Add Advance -->
+    <div id="tab-advance" class="tab-content active">
+        <div class="card">
+            <h3>Add Advance Payment</h3>
+            <form id="advanceForm">
+                <div class="form-group">
+                    <label>Select Employee</label>
+                    <select id="advanceEmployeeId" required>
+                        <option value="">Loading...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Site</label>
+                    <select id="advanceSite" required>
+                        <option value="">Loading...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Amount (SAR)</label>
+                    <input type="number" id="advanceAmount" required min="1">
+                </div>
+                <div class="form-group">
+                    <label>Notes (Optional)</label>
+                    <input type="text" id="advanceNotes" placeholder="e.g., petrol, food">
+                </div>
+                <button type="submit">Submit Advance</button>
+            </form>
+            <div id="advanceMessage" class="message"></div>
+        </div>
+    </div>
+    
+    <!-- Tab 2: Add Expense -->
+    <div id="tab-expense" class="tab-content">
+        <div class="card">
+            <h3>Add Expense</h3>
+            <form id="expenseForm">
+                <div class="form-group">
+                    <label>Select Employee</label>
+                    <select id="expenseEmployeeId" required>
+                        <option value="">Loading...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Site</label>
+                    <select id="expenseSite" required>
+                        <option value="">Loading...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Amount (SAR)</label>
+                    <input type="number" id="expenseAmount" required min="1">
+                </div>
+                <div class="form-group">
+                    <label>Notes (Optional)</label>
+                    <input type="text" id="expenseNotes" placeholder="e.g., travel, food">
+                </div>
+                <button type="submit">Submit Expense</button>
+            </form>
+            <div id="expenseMessage" class="message"></div>
+        </div>
+    </div>
+    
+    <!-- Tab 3: Add Employee -->
+    <div id="tab-employee" class="tab-content">
+        <div class="card">
+            <h3>Add New Employee</h3>
+            <form id="employeeForm">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="employeeName" required>
+                </div>
+                <div class="form-group">
+                    <label>Iqama Number</label>
+                    <input type="text" id="employeeIqama" required>
+                </div>
+                <div class="form-group">
+                    <label>Site</label>
+                    <select id="employeeSite" required>
+                        <option value="">Loading...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Monthly Salary (SAR)</label>
+                    <input type="number" id="employeeSalary" required min="0">
+                </div>
+                <button type="submit">Add Employee</button>
+            </form>
+            <div id="employeeMessage" class="message"></div>
+        </div>
+    </div>
+    
+    <script>
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6hTdcE5hP6GcMZm3c2Iu4larvrmyozW_R1FlG-SoJBsSarXYhXGr-Br3K7dIZk6VQ/exec';
+        
+        let currentUser = null;
+        let employees = [];
+        let sites = [];
+        
+        const userStr = localStorage.getItem('user');
+        if (!userStr) {
+            window.location.href = 'index.html';
+        }
+        currentUser = JSON.parse(userStr);
+        
+        loadEmployees();
+        loadSites();
+        
+        async function loadEmployees() {
+            const response = await fetch(`${APPS_SCRIPT_URL}?action=getEmployees&username=${currentUser.username}&password=${currentUser.password}`);
+            const data = await response.json();
+            
+            if (data.success) {
+                employees = data.employees;
+                populateEmployeeDropdowns();
+            }
+        }
+        
+        function populateEmployeeDropdowns() {
+            const dropdowns = ['advanceEmployeeId', 'expenseEmployeeId'];
+            
+            dropdowns.forEach(id => {
+                const select = document.getElementById(id);
+                select.innerHTML = '<option value="">Select Employee</option>';
+                
+                employees.forEach(emp => {
+                    const option = document.createElement('option');
+                    option.value = emp.id;
+                    option.textContent = `${emp.name} (${emp.site}) - Salary: ${emp.salary}`;
+                    select.appendChild(option);
+                });
+            });
+        }
+        
+        async function loadSites() {
+            const response = await fetch(`${APPS_SCRIPT_URL}?action=getSites`);
+            const data = await response.json();
+            
+            if (data.success) {
+                sites = data.sites;
+                const siteSelects = ['advanceSite', 'expenseSite', 'employeeSite'];
+                
+                siteSelects.forEach(id => {
+                    const select = document.getElementById(id);
+                    select.innerHTML = '<option value="">Select Site</option>';
+                    sites.forEach(site => {
+                        const option = document.createElement('option');
+                        option.value = site;
+                        option.textContent = site;
+                        select.appendChild(option);
+                    });
+                });
+            }
+        }
+        
+        // Add Advance Form
+        document.getElementById('advanceForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const employeeId = document.getElementById('advanceEmployeeId').value;
+            const employee = employees.find(e => e.id == employeeId);
+            
+            const data = {
+                action: 'addAdvance',
+                username: currentUser.username,
+                password: currentUser.password,
+                employeeId: employeeId,
+                employeeName: employee?.name,
+                site: document.getElementById('advanceSite').value,
+                amount: parseFloat(document.getElementById('advanceAmount').value),
+                notes: document.getElementById('advanceNotes').value
+            };
+            
+            const response = await fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+            
+            const msgDiv = document.getElementById('advanceMessage');
+            if (result.success) {
+                msgDiv.className = 'message success';
+                msgDiv.textContent = result.message;
+                document.getElementById('advanceForm').reset();
+            } else {
+                msgDiv.className = 'message error';
+                msgDiv.textContent = result.message;
+            }
+            
+            setTimeout(() => {
+                msgDiv.className = 'message';
+            }, 3000);
+        });
+        
+        // Add Expense Form
+        document.getElementById('expenseForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const employeeId = document.getElementById('expenseEmployeeId').value;
+            const employee = employees.find(e => e.id == employeeId);
+            
+            const data = {
+                action: 'addExpense',
+                username: currentUser.username,
+                password: currentUser.password,
+                employeeId: employeeId,
+                employeeName: employee?.name,
+                site: document.getElementById('expenseSite').value,
+                amount: parseFloat(document.getElementById('expenseAmount').value),
+                notes: document.getElementById('expenseNotes').value
+            };
+            
+            const response = await fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+            
+            const msgDiv = document.getElementById('expenseMessage');
+            if (result.success) {
+                msgDiv.className = 'message success';
+                msgDiv.textContent = result.message;
+                document.getElementById('expenseForm').reset();
+            } else {
+                msgDiv.className = 'message error';
+                msgDiv.textContent = result.message;
+            }
+            
+            setTimeout(() => {
+                msgDiv.className = 'message';
+            }, 3000);
+        });
+        
+        // Add Employee Form
+        document.getElementById('employeeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const data = {
+                action: 'addEmployee',
+                username: currentUser.username,
+                password: currentUser.password,
+                name: document.getElementById('employeeName').value,
+                iqamaNo: document.getElementById('employeeIqama').value,
+                site: document.getElementById('employeeSite').value,
+                salary: parseFloat(document.getElementById('employeeSalary').value)
+            };
+            
+            const response = await fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+            
+            const msgDiv = document.getElementById('employeeMessage');
+            if (result.success) {
+                msgDiv.className = 'message success';
+                msgDiv.textContent = `${result.message}. Employee ID: ${result.employeeId}`;
+                document.getElementById('employeeForm').reset();
+                loadEmployees();
+            } else {
+                msgDiv.className = 'message error';
+                msgDiv.textContent = result.message;
+            }
+            
+            setTimeout(() => {
+                msgDiv.className = 'message';
+            }, 3000);
+        });
+        
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        function logout() {
+            localStorage.removeItem('user');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
