@@ -27,8 +27,6 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         .dues-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #e0e0e0; }
-        .loading-text { text-align: center; padding: 20px; color: #667eea; }
-        .debug-info { background: #f0f0f0; padding: 10px; border-radius: 8px; font-size: 11px; margin-top: 10px; word-break: break-all; }
     </style>
 </head>
 <body>
@@ -47,9 +45,8 @@
     <div id="tab-dashboard" class="tab-content active">
         <div class="card">
             <h3>Outstanding Dues</h3>
-            <div id="outstandingList"><div class="loading-text">Loading...</div></div>
-            <button onclick="refreshDashboard()" style="margin-top: 15px; background: #4caf50;">Refresh Dashboard</button>
-            <div id="debugInfo" class="debug-info"></div>
+            <div id="outstandingList">Loading...</div>
+            <button onclick="loadDashboard()" style="margin-top: 15px; background: #4caf50;">Refresh</button>
         </div>
     </div>
     
@@ -59,11 +56,11 @@
             <form id="advanceForm">
                 <div class="form-group">
                     <label>Select Employee</label>
-                    <select id="advanceEmployeeId" required><option>Loading...</option></select>
+                    <select id="advanceEmployeeId" required></select>
                 </div>
                 <div class="form-group">
                     <label>Site</label>
-                    <select id="advanceSite" required><option>Loading...</option></select>
+                    <select id="advanceSite" required></select>
                 </div>
                 <div class="form-group">
                     <label>Amount (SAR)</label>
@@ -85,11 +82,11 @@
             <form id="expenseForm">
                 <div class="form-group">
                     <label>Select Employee</label>
-                    <select id="expenseEmployeeId" required><option>Loading...</option></select>
+                    <select id="expenseEmployeeId" required></select>
                 </div>
                 <div class="form-group">
                     <label>Site</label>
-                    <select id="expenseSite" required><option>Loading...</option></select>
+                    <select id="expenseSite" required></select>
                 </div>
                 <div class="form-group">
                     <label>Amount (SAR)</label>
@@ -119,7 +116,7 @@
                 </div>
                 <div class="form-group">
                     <label>Site</label>
-                    <select id="employeeSite" required><option>Loading...</option></select>
+                    <select id="employeeSite" required></select>
                 </div>
                 <div class="form-group">
                     <label>Monthly Salary (SAR)</label>
@@ -132,62 +129,74 @@
     </div>
     
     <script>
+        // IMPORTANT: Replace with your Apps Script URL
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwI7YzZIAt-S9__qX9YUgIyTv4VXx6EeVQp6oYI7RfBfXLnzvTbNEgWNE1jrYKEgm_4/exec';
         
         let currentUser = null;
         let employees = [];
         
         const userStr = localStorage.getItem('user');
-        if (!userStr) {
-            window.location.href = 'index.html';
-        }
+        if (!userStr) window.location.href = 'index.html';
         currentUser = JSON.parse(userStr);
-        console.log("User loaded:", currentUser);
+        console.log("User:", currentUser);
         
+        // Load all data
+        async function loadAllData() {
+            await loadEmployees();
+            await loadSites();
+            await loadDashboard();
+        }
+        
+        // Load employees
         async function loadEmployees() {
             try {
                 const url = `${APPS_SCRIPT_URL}?action=getEmployees&username=${currentUser.username}&password=${currentUser.password}`;
+                console.log("Fetching:", url);
                 const response = await fetch(url);
-                const data = await response.json();
+                const text = await response.text();
+                console.log("Raw response:", text);
+                const data = JSON.parse(text);
                 
                 if (data.success && data.employees) {
                     employees = data.employees;
-                    const dropdowns = ['advanceEmployeeId', 'expenseEmployeeId'];
-                    dropdowns.forEach(id => {
-                        const select = document.getElementById(id);
-                        if (select) {
-                            select.innerHTML = '<option value="">-- Select Employee --</option>';
-                            employees.forEach(emp => {
-                                const option = document.createElement('option');
-                                option.value = emp.id;
-                                option.textContent = `${emp.name} | ${emp.site} | ${emp.salary} SAR`;
-                                select.appendChild(option);
-                            });
-                        }
-                    });
+                    const select = document.getElementById('advanceEmployeeId');
+                    const select2 = document.getElementById('expenseEmployeeId');
+                    
+                    if (select) {
+                        select.innerHTML = '<option value="">Select Employee</option>';
+                        employees.forEach(emp => {
+                            select.innerHTML += `<option value="${emp.id}">${emp.name} - ${emp.site} - ${emp.salary} SAR</option>`;
+                        });
+                    }
+                    if (select2) {
+                        select2.innerHTML = '<option value="">Select Employee</option>';
+                        employees.forEach(emp => {
+                            select2.innerHTML += `<option value="${emp.id}">${emp.name} - ${emp.site} - ${emp.salary} SAR</option>`;
+                        });
+                    }
+                } else {
+                    console.error("Failed:", data);
                 }
             } catch (error) {
-                console.error("Error loading employees:", error);
+                console.error("Error:", error);
             }
         }
         
+        // Load sites
         async function loadSites() {
             try {
                 const url = `${APPS_SCRIPT_URL}?action=getSites`;
                 const response = await fetch(url);
                 const data = await response.json();
-                const sites = data.success && data.sites ? data.sites : ['Riyadh', 'Jeddah', 'Dammam'];
+                const sites = data.success && data.sites ? data.sites : ['Shabab1', 'Shabab2', 'Like1', 'Like2'];
                 
-                const siteSelects = ['advanceSite', 'expenseSite', 'employeeSite'];
-                siteSelects.forEach(id => {
+                const selects = ['advanceSite', 'expenseSite', 'employeeSite'];
+                selects.forEach(id => {
                     const select = document.getElementById(id);
                     if (select) {
-                        select.innerHTML = '<option value="">-- Select Site --</option>';
+                        select.innerHTML = '<option value="">Select Site</option>';
                         sites.forEach(site => {
-                            const option = document.createElement('option');
-                            option.value = site;
-                            option.textContent = site;
-                            select.appendChild(option);
+                            select.innerHTML += `<option value="${site}">${site}</option>`;
                         });
                     }
                 });
@@ -196,62 +205,52 @@
             }
         }
         
+        // Load dashboard
         async function loadDashboard() {
-            const debugDiv = document.getElementById('debugInfo');
-            debugDiv.innerHTML = 'Fetching dashboard data...';
-            
             try {
                 const url = `${APPS_SCRIPT_URL}?action=getDashboardData&username=${currentUser.username}&password=${currentUser.password}`;
-                console.log("Dashboard URL:", url);
                 const response = await fetch(url);
                 const data = await response.json();
-                console.log("Dashboard data:", data);
-                
-                debugDiv.innerHTML = `Response: ${JSON.stringify(data, null, 2)}`;
-                
                 const container = document.getElementById('outstandingList');
+                
                 if (data.success && data.outstandingEmployees && data.outstandingEmployees.length > 0) {
                     container.innerHTML = '';
                     data.outstandingEmployees.forEach(emp => {
-                        const div = document.createElement('div');
-                        div.className = 'dues-item';
-                        div.innerHTML = `<span><strong>${emp.name}</strong> (${emp.site})</span><span style="color: #e53935; font-weight: bold;">${emp.dues} SAR</span>`;
-                        container.appendChild(div);
+                        container.innerHTML += `<div class="dues-item"><span><strong>${emp.name}</strong> (${emp.site})</span><span>${emp.dues} SAR</span></div>`;
                     });
                 } else {
-                    container.innerHTML = '<p>No outstanding dues. Add data to OutstandingDues sheet in Google Sheets.</p>';
+                    container.innerHTML = 'No outstanding dues';
                 }
             } catch (error) {
-                console.error("Error loading dashboard:", error);
-                document.getElementById('outstandingList').innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
-                debugDiv.innerHTML = `Error: ${error.message}`;
+                console.error("Error:", error);
+                document.getElementById('outstandingList').innerHTML = 'Error loading dashboard';
             }
         }
         
-        function refreshDashboard() {
-            loadDashboard();
-        }
-        
-        // Add Advance
+        // Add Advance - Using simple fetch with mode
         document.getElementById('advanceForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const employee = employees.find(e => e.id == document.getElementById('advanceEmployeeId').value);
-            if (!employee) {
-                alert("Please select an employee");
-                return;
-            }
+            const employeeId = document.getElementById('advanceEmployeeId').value;
+            const employee = employees.find(e => e.id == employeeId);
+            if (!employee) { alert("Select employee"); return; }
             
-            const url = `${APPS_SCRIPT_URL}?action=addAdvance&username=${currentUser.username}&password=${currentUser.password}&employeeId=${employee.id}&employeeName=${encodeURIComponent(employee.name)}&site=${encodeURIComponent(document.getElementById('advanceSite').value)}&amount=${document.getElementById('advanceAmount').value}&notes=${encodeURIComponent(document.getElementById('advanceNotes').value)}`;
+            const site = document.getElementById('advanceSite').value;
+            const amount = document.getElementById('advanceAmount').value;
+            const notes = document.getElementById('advanceNotes').value;
+            
+            const url = `${APPS_SCRIPT_URL}?action=addAdvance&username=${currentUser.username}&password=${currentUser.password}&employeeId=${employee.id}&employeeName=${encodeURIComponent(employee.name)}&site=${encodeURIComponent(site)}&amount=${amount}&notes=${encodeURIComponent(notes)}`;
             
             try {
                 const response = await fetch(url);
                 const result = await response.json();
                 const msgDiv = document.getElementById('advanceMessage');
-                msgDiv.className = result.success ? 'message success' : 'message error';
-                msgDiv.textContent = result.message;
                 if (result.success) {
+                    msgDiv.className = 'message success';
+                    msgDiv.textContent = '✓ Advance added! Check Google Sheet.';
                     document.getElementById('advanceForm').reset();
-                    alert('✓ Advance added successfully!');
+                } else {
+                    msgDiv.className = 'message error';
+                    msgDiv.textContent = result.message;
                 }
                 setTimeout(() => msgDiv.className = 'message', 3000);
             } catch (error) {
@@ -263,23 +262,27 @@
         // Add Expense
         document.getElementById('expenseForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const employee = employees.find(e => e.id == document.getElementById('expenseEmployeeId').value);
-            if (!employee) {
-                alert("Please select an employee");
-                return;
-            }
+            const employeeId = document.getElementById('expenseEmployeeId').value;
+            const employee = employees.find(e => e.id == employeeId);
+            if (!employee) { alert("Select employee"); return; }
             
-            const url = `${APPS_SCRIPT_URL}?action=addExpense&username=${currentUser.username}&password=${currentUser.password}&employeeId=${employee.id}&employeeName=${encodeURIComponent(employee.name)}&site=${encodeURIComponent(document.getElementById('expenseSite').value)}&amount=${document.getElementById('expenseAmount').value}&notes=${encodeURIComponent(document.getElementById('expenseNotes').value)}`;
+            const site = document.getElementById('expenseSite').value;
+            const amount = document.getElementById('expenseAmount').value;
+            const notes = document.getElementById('expenseNotes').value;
+            
+            const url = `${APPS_SCRIPT_URL}?action=addExpense&username=${currentUser.username}&password=${currentUser.password}&employeeId=${employee.id}&employeeName=${encodeURIComponent(employee.name)}&site=${encodeURIComponent(site)}&amount=${amount}&notes=${encodeURIComponent(notes)}`;
             
             try {
                 const response = await fetch(url);
                 const result = await response.json();
                 const msgDiv = document.getElementById('expenseMessage');
-                msgDiv.className = result.success ? 'message success' : 'message error';
-                msgDiv.textContent = result.message;
                 if (result.success) {
+                    msgDiv.className = 'message success';
+                    msgDiv.textContent = '✓ Expense added! Check Google Sheet.';
                     document.getElementById('expenseForm').reset();
-                    alert('✓ Expense added successfully!');
+                } else {
+                    msgDiv.className = 'message error';
+                    msgDiv.textContent = result.message;
                 }
                 setTimeout(() => msgDiv.className = 'message', 3000);
             } catch (error) {
@@ -291,18 +294,25 @@
         // Add Employee
         document.getElementById('employeeForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const url = `${APPS_SCRIPT_URL}?action=addEmployee&username=${currentUser.username}&password=${currentUser.password}&name=${encodeURIComponent(document.getElementById('employeeName').value)}&iqamaNo=${encodeURIComponent(document.getElementById('employeeIqama').value)}&site=${encodeURIComponent(document.getElementById('employeeSite').value)}&salary=${document.getElementById('employeeSalary').value}`;
+            const name = document.getElementById('employeeName').value;
+            const iqama = document.getElementById('employeeIqama').value;
+            const site = document.getElementById('employeeSite').value;
+            const salary = document.getElementById('employeeSalary').value;
+            
+            const url = `${APPS_SCRIPT_URL}?action=addEmployee&username=${currentUser.username}&password=${currentUser.password}&name=${encodeURIComponent(name)}&iqamaNo=${encodeURIComponent(iqama)}&site=${encodeURIComponent(site)}&salary=${salary}`;
             
             try {
                 const response = await fetch(url);
                 const result = await response.json();
                 const msgDiv = document.getElementById('employeeMessage');
-                msgDiv.className = result.success ? 'message success' : 'message error';
-                msgDiv.textContent = result.message;
                 if (result.success) {
+                    msgDiv.className = 'message success';
+                    msgDiv.textContent = '✓ Employee added! ID: ' + result.employeeId;
                     document.getElementById('employeeForm').reset();
-                    alert('✓ Employee added successfully!');
-                    loadEmployees();
+                    loadEmployees(); // Reload employee list
+                } else {
+                    msgDiv.className = 'message error';
+                    msgDiv.textContent = result.message;
                 }
                 setTimeout(() => msgDiv.className = 'message', 3000);
             } catch (error) {
@@ -314,20 +324,14 @@
         function showTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            const target = document.getElementById(`tab-${tabName}`);
-            if (target) target.classList.add('active');
+            document.getElementById(`tab-${tabName}`).classList.add('active');
             if (event && event.target) event.target.classList.add('active');
         }
         
-        function logout() { 
-            localStorage.removeItem('user'); 
-            window.location.href = 'index.html'; 
-        }
+        function logout() { localStorage.removeItem('user'); window.location.href = 'index.html'; }
         
-        // Initialize
-        loadEmployees();
-        loadSites();
-        loadDashboard();
+        // Start
+        loadAllData();
     </script>
 </body>
 </html>
