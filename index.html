@@ -148,7 +148,7 @@
         </div>
     </div>
     
-      <script>
+    <script>
         // === YOUR APPS SCRIPT URL ===
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6hTdcE5hP6GcMZm3c2Iu4larvrmyozW_R1FlG-SoJBsSarXYhXGr-Br3K7dIZk6VQ/exec';
         
@@ -162,7 +162,7 @@
             document.getElementById('error').style.display = 'none';
             
             try {
-                // Use GET request (same as working direct URL)
+                // Use GET request for login
                 const loginUrl = `${APPS_SCRIPT_URL}?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
                 console.log("Login URL:", loginUrl);
                 
@@ -171,7 +171,15 @@
                 console.log("Response:", data);
                 
                 if (data.success) {
-                    localStorage.setItem('user', JSON.stringify(data.user));
+                    // Store user data WITH PASSWORD
+                    const userData = {
+                        username: data.user.username,
+                        role: data.user.role,
+                        site: data.user.site,
+                        password: password  // ← IMPORTANT: Store the password
+                    };
+                    localStorage.setItem('user', JSON.stringify(userData));
+                    console.log("Stored user data:", userData);
                     
                     // Redirect based on role
                     if (data.user.role === 'sitehead') {
