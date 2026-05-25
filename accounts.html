@@ -330,7 +330,7 @@
         </div>
     </div>
     
-    <script>
+       <script>
         // === YOUR APPS SCRIPT URL ===
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6hTdcE5hP6GcMZm3c2Iu4larvrmyozW_R1FlG-SoJBsSarXYhXGr-Br3K7dIZk6VQ/exec';
         
@@ -396,7 +396,8 @@
                     employees.forEach(emp => {
                         const option = document.createElement('option');
                         option.value = emp.id;
-                        option.textContent = `${emp.name} (${emp.site}) - Salary: ${emp.salary}`;
+                        // Clean display: Name (Site) - Salary: X SAR
+                        option.textContent = `${emp.name} (${emp.site}) - ${emp.salary} SAR`;
                         select.appendChild(option);
                     });
                 }
