@@ -173,11 +173,11 @@
                 if (data.success) {
                     // Store user data WITH PASSWORD
                     const userData = {
-                        username: data.user.username,
-                        role: data.user.role,
-                        site: data.user.site,
-                        password: password  // ← IMPORTANT: Store the password
-                    };
+    username: data.user.username,
+    role: data.user.role,
+    site: data.user.site,
+    password: password  // ← THIS LINE IS CRITICAL
+};
                     localStorage.setItem('user', JSON.stringify(userData));
                     console.log("Stored user data:", userData);
                     
