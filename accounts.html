@@ -129,7 +129,8 @@
     </div>
     
     <script>
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6hTdcE5hP6GcMZm3c2Iu4larvrmyozW_R1FlG-SoJBsSarXYhXGr-Br3K7dIZk6VQ/exec';
+        // === UPDATE THIS WITH YOUR NEW APPS SCRIPT URL ===
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwI7YzZIAt-S9__qX9YUgIyTv4VXx6EeVQp6oYI7RfBfXLnzvTbNEgWNE1jrYKEgm_4/exec';
         
         let currentUser = null;
         let employees = [];
@@ -189,7 +190,7 @@
             }
         }
         
-        // Add Advance - Using GET
+        // Add Advance
         document.getElementById('advanceForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const employee = employees.find(e => e.id == document.getElementById('advanceEmployeeId').value);
@@ -203,7 +204,7 @@
                 msgDiv.textContent = result.message;
                 if (result.success) {
                     document.getElementById('advanceForm').reset();
-                    loadDashboard();
+                    alert('Advance added! Check Google Sheet.');
                 }
                 setTimeout(() => msgDiv.className = 'message', 3000);
             } catch (error) {
@@ -212,7 +213,7 @@
             }
         });
         
-        // Add Expense - Using GET
+        // Add Expense
         document.getElementById('expenseForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const employee = employees.find(e => e.id == document.getElementById('expenseEmployeeId').value);
@@ -226,7 +227,7 @@
                 msgDiv.textContent = result.message;
                 if (result.success) {
                     document.getElementById('expenseForm').reset();
-                    loadDashboard();
+                    alert('Expense added! Check Google Sheet.');
                 }
                 setTimeout(() => msgDiv.className = 'message', 3000);
             } catch (error) {
@@ -235,7 +236,7 @@
             }
         });
         
-        // Add Employee - Using GET
+        // Add Employee
         document.getElementById('employeeForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const url = `${APPS_SCRIPT_URL}?action=addEmployee&username=${currentUser.username}&password=${currentUser.password}&name=${document.getElementById('employeeName').value}&iqamaNo=${document.getElementById('employeeIqama').value}&site=${document.getElementById('employeeSite').value}&salary=${document.getElementById('employeeSalary').value}`;
@@ -249,6 +250,7 @@
                 if (result.success) {
                     document.getElementById('employeeForm').reset();
                     loadEmployees();
+                    alert('Employee added!');
                 }
                 setTimeout(() => msgDiv.className = 'message', 3000);
             } catch (error) {
