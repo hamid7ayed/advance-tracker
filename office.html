@@ -4,121 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Office Dashboard</title>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#1976D2">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f5f5f5;
-            padding: 20px;
+            background: #f0f2f5;
+            padding: 16px;
             padding-bottom: 80px;
         }
-        
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             color: white;
             padding: 20px;
-            border-radius: 15px;
+            border-radius: 24px;
             margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        
-        .header h1 {
-            font-size: 20px;
-        }
-        
         .logout-btn {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.15);
             border: none;
             color: white;
-            padding: 8px 15px;
-            border-radius: 8px;
+            padding: 10px 18px;
+            border-radius: 30px;
             cursor: pointer;
         }
-        
         .card {
             background: white;
-            border-radius: 15px;
+            border-radius: 24px;
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
-        
         .card h3 {
-            color: #333;
             margin-bottom: 15px;
             border-left: 4px solid #667eea;
             padding-left: 12px;
         }
-        
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #555;
-            font-size: 14px;
-            font-weight: 500;
-        }
-        
+        .form-group { margin-bottom: 15px; }
+        label { font-weight: 500; margin-bottom: 5px; display: block; }
         select, input {
             width: 100%;
-            padding: 10px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
+            padding: 14px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 16px;
+            font-size: 16px;
         }
-        
-        select:focus, input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        
         button {
+            width: 100%;
+            padding: 14px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 14px;
+            border-radius: 30px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            width: 100%;
         }
-        
-        button:active {
-            transform: scale(0.98);
-        }
-        
+        button:active { transform: scale(0.97); }
         .message {
-            padding: 10px;
-            border-radius: 8px;
+            padding: 12px;
+            border-radius: 16px;
             margin-top: 15px;
             display: none;
         }
-        
-        .message.success {
-            background: #d4edda;
-            color: #155724;
-            display: block;
-        }
-        
-        .message.error {
-            background: #f8d7da;
-            color: #721c24;
-            display: block;
-        }
-        
+        .message.success { background: #d1fae5; color: #065f46; display: block; }
+        .message.error { background: #fee2e2; color: #991b1b; display: block; }
         .tab-bar {
             position: fixed;
             bottom: 0;
@@ -127,263 +79,229 @@
             background: white;
             display: flex;
             border-top: 1px solid #e0e0e0;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            padding: 8px 16px 16px;
+            gap: 8px;
         }
-        
         .tab {
             flex: 1;
             text-align: center;
-            padding: 12px;
+            padding: 12px 8px;
             background: none;
             border: none;
             font-size: 12px;
+            font-weight: 500;
+            color: #888;
+            cursor: pointer;
+            border-radius: 30px;
+        }
+        .tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .site-readonly {
+            background: #f5f5f5;
             color: #666;
+            cursor: not-allowed;
+        }
+        .employee-list { max-height: 400px; overflow-y: auto; }
+        .employee-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px;
+            border-bottom: 1px solid #f0f2f5;
+        }
+        .edit-employee-btn {
+            background: #f59e0b;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            color: white;
             cursor: pointer;
         }
-        
-        .tab.active {
-            color: #667eea;
-            border-top: 3px solid #667eea;
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
+        .refresh-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 12px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <div>
-            <h1>Office Dashboard</h1>
-        </div>
+        <div><h1>📋 Office Dashboard</h1></div>
         <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
-    
+
     <div class="tab-bar">
-        <button class="tab active" onclick="showTab('advance')">Add Advance</button>
-        <button class="tab" onclick="showTab('expense')">Add Expense</button>
-        <button class="tab" onclick="showTab('employee')">Add Employee</button>
+        <button class="tab active" onclick="showTab('advance')">💰 Advance</button>
+        <button class="tab" onclick="showTab('expense')">📝 Expense</button>
+        <button class="tab" onclick="showTab('employee')">👥 Employees</button>
     </div>
-    
-    <!-- Tab 1: Add Advance -->
+
+    <!-- Add Advance Tab -->
     <div id="tab-advance" class="tab-content active">
         <div class="card">
-            <h3>Add Advance Payment</h3>
+            <h3>💰 Add Advance Payment</h3>
             <form id="advanceForm">
                 <div class="form-group">
                     <label>Select Employee</label>
-                    <select id="advanceEmployeeId" required>
-                        <option value="">Loading employees...</option>
-                    </select>
+                    <select id="employeeId" required></select>
                 </div>
                 <div class="form-group">
                     <label>Site</label>
-                    <select id="advanceSite" required>
-                        <option value="">Loading sites...</option>
-                    </select>
+                    <input type="text" id="site" readonly class="site-readonly">
                 </div>
                 <div class="form-group">
                     <label>Amount (SAR)</label>
-                    <input type="number" id="advanceAmount" required min="1">
+                    <input type="number" id="amount" required>
                 </div>
                 <div class="form-group">
-                    <label>Notes (Optional)</label>
-                    <input type="text" id="advanceNotes" placeholder="e.g., petrol, food">
+                    <label>Notes</label>
+                    <input type="text" id="notes">
                 </div>
-                <button type="submit">Submit Advance</button>
+                <button type="submit">Add Advance</button>
             </form>
             <div id="advanceMessage" class="message"></div>
         </div>
     </div>
-    
-    <!-- Tab 2: Add Expense -->
+
+    <!-- Add Expense Tab -->
     <div id="tab-expense" class="tab-content">
         <div class="card">
-            <h3>Add Expense</h3>
+            <h3>📝 Add Expense</h3>
             <form id="expenseForm">
                 <div class="form-group">
                     <label>Select Employee</label>
-                    <select id="expenseEmployeeId" required>
-                        <option value="">Loading employees...</option>
-                    </select>
+                    <select id="expenseEmployeeId" required></select>
                 </div>
                 <div class="form-group">
                     <label>Site</label>
-                    <select id="expenseSite" required>
-                        <option value="">Loading sites...</option>
-                    </select>
+                    <input type="text" id="expenseSite" readonly class="site-readonly">
                 </div>
                 <div class="form-group">
                     <label>Amount (SAR)</label>
-                    <input type="number" id="expenseAmount" required min="1">
+                    <input type="number" id="expenseAmount" required>
                 </div>
                 <div class="form-group">
-                    <label>Notes (Optional)</label>
-                    <input type="text" id="expenseNotes" placeholder="e.g., travel, food">
+                    <label>Notes</label>
+                    <input type="text" id="expenseNotes">
                 </div>
-                <button type="submit">Submit Expense</button>
+                <button type="submit">Add Expense</button>
             </form>
             <div id="expenseMessage" class="message"></div>
         </div>
     </div>
-    
-    <!-- Tab 3: Add Employee -->
+
+    <!-- Employees Tab -->
     <div id="tab-employee" class="tab-content">
         <div class="card">
-            <h3>Add New Employee</h3>
-            <form id="employeeForm">
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" id="employeeName" required>
-                </div>
-                <div class="form-group">
-                    <label>Iqama Number</label>
-                    <input type="text" id="employeeIqama" required>
-                </div>
-                <div class="form-group">
-                    <label>Site</label>
-                    <select id="employeeSite" required>
-                        <option value="">Loading sites...</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Monthly Salary (SAR)</label>
-                    <input type="number" id="employeeSalary" required min="0">
-                </div>
-                <button type="submit">Add Employee</button>
-            </form>
-            <div id="employeeMessage" class="message"></div>
+            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3>👥 All Employees</h3>
+                <button class="refresh-btn" onclick="showAddEmployee()">➕ Add</button>
+            </div>
+            <div id="employeeList" class="employee-list">Loading...</div>
         </div>
     </div>
-    
+
     <script>
-        // === YOUR APPS SCRIPT URL ===
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwL1vRskseg8sPLsYEnihHaKbzNP_MB7Y7lbL0QWweYb_Elz3VWmkR80zkF6uK2vwP6/exec';
+        // IMPORTANT: Update this with your Apps Script URL
+        const URL = 'https://script.google.com/macros/s/AKfycbwL1vRskseg8sPLsYEnihHaKbzNP_MB7Y7lbL0QWweYb_Elz3VWmkR80zkF6uK2vwP6/exec';
         
         let currentUser = null;
         let employees = [];
-        let sites = [];
         
-        // Check if user is logged in
+        // Check login and get user data
         const userStr = localStorage.getItem('user');
         if (!userStr) {
             window.location.href = 'index.html';
         }
         currentUser = JSON.parse(userStr);
-        console.log("Office logged in as:", currentUser);
-        
-        // Load all data when page loads
-        async function loadAllData() {
-            await loadEmployees();
-            await loadSites();
-        }
+        console.log("Office User:", currentUser);
         
         async function loadEmployees() {
             try {
-                const url = `${APPS_SCRIPT_URL}?action=getEmployees&username=${currentUser.username}&password=${currentUser.password}`;
-                console.log("Fetching employees from:", url);
-                
-                const response = await fetch(url);
+                const response = await fetch(`${URL}?action=getEmployees&username=${currentUser.username}&password=${currentUser.password}`);
                 const data = await response.json();
-                console.log("Employees response:", data);
+                console.log("Employees loaded:", data);
                 
                 if (data.success) {
                     employees = data.employees;
-                    populateEmployeeDropdowns();
-                    return true;
-                } else {
-                    console.error("Failed to load employees:", data.message);
-                    return false;
-                }
-            } catch (error) {
-                console.error("Error loading employees:", error);
-                return false;
-            }
-        }
-        
-        function populateEmployeeDropdowns() {
-            const dropdowns = ['advanceEmployeeId', 'expenseEmployeeId'];
-            
-            dropdowns.forEach(id => {
-                const select = document.getElementById(id);
-                if (select) {
-                    select.innerHTML = '<option value="">Select Employee</option>';
-                    employees.forEach(emp => {
-                        const option = document.createElement('option');
-                        option.value = emp.id;
-                        option.textContent = `${emp.name} (${emp.site}) - Salary: ${emp.salary}`;
-                        select.appendChild(option);
-                    });
-                }
-            });
-        }
-        
-        async function loadSites() {
-            try {
-                const url = `${APPS_SCRIPT_URL}?action=getSites`;
-                console.log("Fetching sites from:", url);
-                
-                const response = await fetch(url);
-                const data = await response.json();
-                console.log("Sites response:", data);
-                
-                if (data.success) {
-                    sites = data.sites;
-                    const siteSelects = ['advanceSite', 'expenseSite', 'employeeSite'];
                     
-                    siteSelects.forEach(id => {
+                    // Update dropdowns
+                    const selects = ['employeeId', 'expenseEmployeeId'];
+                    selects.forEach(id => {
                         const select = document.getElementById(id);
                         if (select) {
-                            select.innerHTML = '<option value="">Select Site</option>';
-                            sites.forEach(site => {
+                            select.innerHTML = '<option value="">Select Employee</option>';
+                            employees.forEach(emp => {
                                 const option = document.createElement('option');
-                                option.value = site;
-                                option.textContent = site;
+                                option.value = emp.id;
+                                option.setAttribute('data-site', emp.site);
+                                option.textContent = `${emp.name} - ${emp.site} - ${emp.salary} SAR`;
                                 select.appendChild(option);
                             });
                         }
                     });
-                    return true;
+                    
+                    // Update employee list
+                    const container = document.getElementById('employeeList');
+                    container.innerHTML = employees.map(emp => `
+                        <div class="employee-item">
+                            <div>
+                                <strong>${emp.name}</strong><br>
+                                <small>${emp.site} | ${emp.salary} SAR</small>
+                            </div>
+                            <button class="edit-employee-btn" onclick="editEmployee(${emp.id})">Edit</button>
+                        </div>
+                    `).join('');
                 } else {
-                    console.error("Failed to load sites");
-                    return false;
+                    console.error("Failed to load employees:", data.message);
                 }
             } catch (error) {
-                console.error("Error loading sites:", error);
-                return false;
+                console.error("Error loading employees:", error);
             }
         }
         
-        // Add Advance Form
-        document.getElementById('advanceForm').addEventListener('submit', async (e) => {
+        // Auto-fill site when employee selected in Advance tab
+        document.getElementById('employeeId')?.addEventListener('change', (e) => {
+            const opt = e.target.options[e.target.selectedIndex];
+            const site = opt?.getAttribute('data-site') || '';
+            document.getElementById('site').value = site;
+        });
+        
+        // Auto-fill site when employee selected in Expense tab
+        document.getElementById('expenseEmployeeId')?.addEventListener('change', (e) => {
+            const opt = e.target.options[e.target.selectedIndex];
+            const site = opt?.getAttribute('data-site') || '';
+            document.getElementById('expenseSite').value = site;
+        });
+        
+        // Add Advance Form Submit
+        document.getElementById('advanceForm')?.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const employeeId = document.getElementById('advanceEmployeeId').value;
-            const employee = employees.find(e => e.id == employeeId);
+            const empId = document.getElementById('employeeId').value;
+            const emp = employees.find(e => e.id == empId);
+            if (!emp) {
+                alert("Please select an employee");
+                return;
+            }
             
-            const data = {
-                action: 'addAdvance',
-                username: currentUser.username,
-                password: currentUser.password,
-                employeeId: employeeId,
-                employeeName: employee?.name,
-                site: document.getElementById('advanceSite').value,
-                amount: parseFloat(document.getElementById('advanceAmount').value),
-                notes: document.getElementById('advanceNotes').value
-            };
+            const site = document.getElementById('site').value;
+            const amount = document.getElementById('amount').value;
+            const notes = document.getElementById('notes').value;
             
             try {
-                const response = await fetch(APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                });
+                const url = `${URL}?action=addAdvance&username=${currentUser.username}&password=${currentUser.password}&employeeId=${emp.id}&employeeName=${encodeURIComponent(emp.name)}&site=${encodeURIComponent(site)}&amount=${amount}&notes=${encodeURIComponent(notes)}`;
+                console.log("Submitting advance:", url);
+                
+                const response = await fetch(url);
                 const result = await response.json();
                 
                 const msgDiv = document.getElementById('advanceMessage');
@@ -391,48 +309,40 @@
                     msgDiv.className = 'message success';
                     msgDiv.textContent = result.message;
                     document.getElementById('advanceForm').reset();
+                    document.getElementById('site').value = '';
+                    alert('✓ Advance added successfully!');
                 } else {
                     msgDiv.className = 'message error';
                     msgDiv.textContent = result.message;
                 }
-                
-                setTimeout(() => {
-                    msgDiv.className = 'message';
-                }, 3000);
+                setTimeout(() => msgDiv.className = 'message', 3000);
             } catch (error) {
                 console.error("Error:", error);
-                const msgDiv = document.getElementById('advanceMessage');
-                msgDiv.className = 'message error';
-                msgDiv.textContent = 'Network error: ' + error.message;
+                document.getElementById('advanceMessage').className = 'message error';
+                document.getElementById('advanceMessage').textContent = 'Error: ' + error.message;
             }
         });
         
-        // Add Expense Form
-        document.getElementById('expenseForm').addEventListener('submit', async (e) => {
+        // Add Expense Form Submit
+        document.getElementById('expenseForm')?.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const employeeId = document.getElementById('expenseEmployeeId').value;
-            const employee = employees.find(e => e.id == employeeId);
+            const empId = document.getElementById('expenseEmployeeId').value;
+            const emp = employees.find(e => e.id == empId);
+            if (!emp) {
+                alert("Please select an employee");
+                return;
+            }
             
-            const data = {
-                action: 'addExpense',
-                username: currentUser.username,
-                password: currentUser.password,
-                employeeId: employeeId,
-                employeeName: employee?.name,
-                site: document.getElementById('expenseSite').value,
-                amount: parseFloat(document.getElementById('expenseAmount').value),
-                notes: document.getElementById('expenseNotes').value
-            };
+            const site = document.getElementById('expenseSite').value;
+            const amount = document.getElementById('expenseAmount').value;
+            const notes = document.getElementById('expenseNotes').value;
             
             try {
-                const response = await fetch(APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                });
+                const url = `${URL}?action=addExpense&username=${currentUser.username}&password=${currentUser.password}&employeeId=${emp.id}&employeeName=${encodeURIComponent(emp.name)}&site=${encodeURIComponent(site)}&amount=${amount}&notes=${encodeURIComponent(notes)}`;
+                console.log("Submitting expense:", url);
+                
+                const response = await fetch(url);
                 const result = await response.json();
                 
                 const msgDiv = document.getElementById('expenseMessage');
@@ -440,78 +350,61 @@
                     msgDiv.className = 'message success';
                     msgDiv.textContent = result.message;
                     document.getElementById('expenseForm').reset();
+                    document.getElementById('expenseSite').value = '';
+                    alert('✓ Expense added successfully!');
                 } else {
                     msgDiv.className = 'message error';
                     msgDiv.textContent = result.message;
                 }
-                
-                setTimeout(() => {
-                    msgDiv.className = 'message';
-                }, 3000);
+                setTimeout(() => msgDiv.className = 'message', 3000);
             } catch (error) {
                 console.error("Error:", error);
-                const msgDiv = document.getElementById('expenseMessage');
-                msgDiv.className = 'message error';
-                msgDiv.textContent = 'Network error: ' + error.message;
+                document.getElementById('expenseMessage').className = 'message error';
+                document.getElementById('expenseMessage').textContent = 'Error: ' + error.message;
             }
         });
         
-        // Add Employee Form
-        document.getElementById('employeeForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
+        // Add Employee
+        function showAddEmployee() {
+            const name = prompt("Enter employee name:");
+            if (!name) return;
+            const iqama = prompt("Enter Iqama number:");
+            const site = prompt("Enter site (e.g., Shabab4):");
+            const salary = prompt("Enter monthly salary (SAR):");
+            if (!name || !iqama || !site || !salary) return;
             
-            const data = {
-                action: 'addEmployee',
-                username: currentUser.username,
-                password: currentUser.password,
-                name: document.getElementById('employeeName').value,
-                iqamaNo: document.getElementById('employeeIqama').value,
-                site: document.getElementById('employeeSite').value,
-                salary: parseFloat(document.getElementById('employeeSalary').value)
-            };
+            fetch(`${URL}?action=addEmployee&username=${currentUser.username}&password=${currentUser.password}&name=${encodeURIComponent(name)}&iqamaNo=${encodeURIComponent(iqama)}&site=${encodeURIComponent(site)}&salary=${salary}`)
+                .then(res => res.json())
+                .then(result => {
+                    alert(result.message);
+                    if (result.success) loadEmployees();
+                })
+                .catch(err => alert("Error: " + err.message));
+        }
+        
+        // Edit Employee
+        function editEmployee(id) {
+            const emp = employees.find(e => e.id == id);
+            if (!emp) return;
+            const newName = prompt("Edit name:", emp.name);
+            if (!newName) return;
+            const newSite = prompt("Edit site:", emp.site);
+            const newSalary = prompt("Edit salary:", emp.salary);
             
-            try {
-                const response = await fetch(APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                });
-                const result = await response.json();
-                
-                const msgDiv = document.getElementById('employeeMessage');
-                if (result.success) {
-                    msgDiv.className = 'message success';
-                    msgDiv.textContent = `${result.message}. Employee ID: ${result.employeeId}`;
-                    document.getElementById('employeeForm').reset();
-                    loadEmployees();
-                } else {
-                    msgDiv.className = 'message error';
-                    msgDiv.textContent = result.message;
-                }
-                
-                setTimeout(() => {
-                    msgDiv.className = 'message';
-                }, 3000);
-            } catch (error) {
-                console.error("Error:", error);
-                const msgDiv = document.getElementById('employeeMessage');
-                msgDiv.className = 'message error';
-                msgDiv.textContent = 'Network error: ' + error.message;
-            }
-        });
+            fetch(`${URL}?action=updateEmployee&username=${currentUser.username}&password=${currentUser.password}&employeeId=${emp.id}&name=${encodeURIComponent(newName)}&iqamaNo=${emp.iqama}&site=${encodeURIComponent(newSite)}&salary=${newSalary}&status=Active`)
+                .then(res => res.json())
+                .then(result => {
+                    alert(result.message);
+                    if (result.success) loadEmployees();
+                })
+                .catch(err => alert("Error: " + err.message));
+        }
         
         function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.getElementById(`tab-${tabName}`).classList.add('active');
-            event.target.classList.add('active');
+            if (event?.target) event.target.classList.add('active');
         }
         
         function logout() {
@@ -519,8 +412,8 @@
             window.location.href = 'index.html';
         }
         
-        // Start loading data
-        loadAllData();
+        // Initialize
+        loadEmployees();
     </script>
 </body>
 </html>
