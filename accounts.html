@@ -70,7 +70,6 @@
         <button class="tab" onclick="showTab('employee')">👥 Employee</button>
     </div>
 
-    <!-- Dashboard Tab -->
     <div id="tab-dashboard" class="tab-content active">
         <div class="card">
             <div class="card-header"><h3>⚠️ Outstanding Dues</h3><button class="refresh-btn" onclick="loadDashboard()">🔄 Refresh</button></div>
@@ -82,7 +81,6 @@
         </div>
     </div>
 
-    <!-- Add Advance Tab -->
     <div id="tab-advance" class="tab-content">
         <div class="card">
             <h3>💰 Add Advance</h3>
@@ -97,7 +95,6 @@
         </div>
     </div>
 
-    <!-- Add Expense Tab -->
     <div id="tab-expense" class="tab-content">
         <div class="card">
             <h3>📝 Add Expense</h3>
@@ -112,7 +109,6 @@
         </div>
     </div>
 
-    <!-- Salary Payment Tab -->
     <div id="tab-salary" class="tab-content">
         <div class="card">
             <h3>💵 Process Salary</h3>
@@ -134,7 +130,6 @@
         </div>
     </div>
 
-    <!-- Employee Tab -->
     <div id="tab-employee" class="tab-content">
         <div class="card">
             <div class="card-header"><h3>👥 All Employees</h3><button class="refresh-btn" onclick="openAddEmployeeModal()">➕ Add Employee</button></div>
@@ -175,7 +170,7 @@
     </div>
 
     <script>
-        const URL = 'https://script.google.com/macros/s/AKfycbynF_UWp8kkfv_J6K6kxAj0DgEHcb9VniO7u_EHM9GwGb-ZitGRyFxLvmSeaontcfxL/exec';
+        const URL = 'https://script.google.com/macros/s/AKfycbyG6A0cfKyFR1vHy_5xdp164zpqyKKY35nuKc0bkzYrh4OielIv-h8vq4qjQwpsb0UG/exec';
         let currentUser = null, employees = [], sites = [];
         
         const userStr = localStorage.getItem('user');
@@ -328,7 +323,7 @@
             setTimeout(() => msg.className = 'message', 3000);
         });
         
-        // Add Employee with Alert
+        // Add Employee with ALERT
         document.getElementById('addEmployeeForm')?.addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('newName').value;
