@@ -106,7 +106,7 @@
         }
         .message.success { background: #d1fae5; color: #065f46; display: block; }
         .message.error { background: #fee2e2; color: #991b1b; display: block; }
-        .dues-list { max-height: 400px; overflow-y: auto; }
+        .dues-list { max-height: 300px; overflow-y: auto; }
         .dues-item {
             display: flex;
             justify-content: space-between;
@@ -119,6 +119,13 @@
         .dues-item-name { font-weight: 600; color: #1a1a2e; }
         .dues-item-site { font-size: 12px; color: #888; margin-top: 2px; }
         .dues-item-amount { font-weight: 700; color: #e53935; font-size: 18px; }
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f2f5;
+        }
         .tab-bar {
             position: fixed;
             bottom: 0;
@@ -173,6 +180,15 @@
             color: #666;
             cursor: not-allowed;
         }
+        .employee-list { max-height: 400px; overflow-y: auto; }
+        .edit-employee-btn {
+            background: #f59e0b;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -202,6 +218,13 @@
                 <button class="refresh-btn" onclick="loadDashboard()">🔄 Refresh</button>
             </div>
             <div id="outstandingList" class="dues-list">Loading...</div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h3>📋 Recent Transactions</h3>
+                <button class="refresh-btn" onclick="loadRecentTransactions()">🔄 Refresh</button>
+            </div>
+            <div id="recentTransactions">Loading...</div>
         </div>
     </div>
 
@@ -264,13 +287,13 @@
                 <h3>👥 Employees</h3>
                 <button class="refresh-btn" onclick="showAddEmployee()">➕ Add</button>
             </div>
-            <div id="employeeList"></div>
+            <div id="employeeList" class="employee-list">Loading...</div>
         </div>
     </div>
 
     <script>
         // IMPORTANT: Update this with your Apps Script URL
-        const URL = 'https://script.google.com/macros/s/AKfycbx8ClWqkOOpAB-cxR8ugiGlWy7KNVDBAAsAKP-Pagk2lmOddbBOsY0LyeL_rFnLxWJH/exec';
+        const URL = 'https://script.google.com/macros/s/AKfycbwL1vRskseg8sPLsYEnihHaKbzNP_MB7Y7lbL0QWweYb_Elz3VWmkR80zkF6uK2vwP6/exec';
         
         let currentUser = null;
         let employees = [];
@@ -278,7 +301,6 @@
         const userStr = localStorage.getItem('user');
         if (!userStr) window.location.href = 'index.html';
         currentUser = JSON.parse(userStr);
-        console.log("User:", currentUser);
         
         async function loadEmployees() {
             const response = await fetch(`${URL}?action=getEmployees&username=${currentUser.username}&password=${currentUser.password}`);
@@ -287,7 +309,6 @@
                 employees = data.employees;
                 document.getElementById('totalEmployees').innerText = employees.length;
                 
-                // Update dropdowns
                 const selects = ['employeeId', 'expenseEmployeeId', 'salaryEmployeeId'];
                 selects.forEach(id => {
                     const select = document.getElementById(id);
@@ -303,12 +324,11 @@
                     }
                 });
                 
-                // Update employee list
                 const container = document.getElementById('employeeList');
                 container.innerHTML = employees.map(emp => `
                     <div class="dues-item">
                         <div><strong>${emp.name}</strong><br><small>${emp.site} | ${emp.salary} SAR</small></div>
-                        <button onclick="editEmployee(${emp.id})" style="background:#f59e0b; border:none; padding:6px 12px; border-radius:20px; color:white;">Edit</button>
+                        <button class="edit-employee-btn" onclick="editEmployee(${emp.id})">Edit</button>
                     </div>
                 `).join('');
             }
@@ -318,7 +338,6 @@
             try {
                 const response = await fetch(`${URL}?action=getDashboardData&username=${currentUser.username}&password=${currentUser.password}`);
                 const data = await response.json();
-                console.log("Dashboard data:", data);
                 
                 const container = document.getElementById('outstandingList');
                 let totalOutstanding = 0;
@@ -340,11 +359,43 @@
                 document.getElementById('totalOutstanding').innerText = totalOutstanding.toLocaleString();
             } catch (error) {
                 console.error("Dashboard error:", error);
-                document.getElementById('outstandingList').innerHTML = '<div style="padding:20px; text-align:center; color:red;">Error loading dashboard</div>';
             }
         }
         
-        // Auto-fill site when employee selected
+        async function loadRecentTransactions() {
+            try {
+                const response = await fetch(`${URL}?action=getRecentTransactions&username=${currentUser.username}&password=${currentUser.password}`);
+                const data = await response.json();
+                
+                const container = document.getElementById('recentTransactions');
+                
+                if (data.success && data.transactions && data.transactions.length > 0) {
+                    const getTypeBadge = (type) => {
+                        if (type === 'advance') return '<span style="background:#fef3c7; color:#d97706; padding:4px 12px; border-radius:20px; font-size:11px;">💰 Advance</span>';
+                        if (type === 'expense') return '<span style="background:#fee2e2; color:#dc2626; padding:4px 12px; border-radius:20px; font-size:11px;">📝 Expense</span>';
+                        if (type === 'salary') return '<span style="background:#d1fae5; color:#059669; padding:4px 12px; border-radius:20px; font-size:11px;">💵 Salary</span>';
+                        return '<span style="background:#e5e7eb; color:#6b7280; padding:4px 12px; border-radius:20px; font-size:11px;">Other</span>';
+                    };
+                    
+                    container.innerHTML = data.transactions.map(t => `
+                        <div class="transaction-item">
+                            <div style="flex:2">
+                                <div style="font-weight:600;">${t.employeeName}</div>
+                                <div style="font-size:11px; color:#888;">${t.site} | ${new Date(t.date).toLocaleDateString()}</div>
+                            </div>
+                            <div style="flex:1; text-align:center;">${getTypeBadge(t.type)}</div>
+                            <div style="flex:1; text-align:right; font-weight:700;">${t.amount} SAR</div>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<div style="padding:20px; text-align:center;">📭 No transactions yet</div>';
+                }
+            } catch (error) {
+                console.error("Transactions error:", error);
+                document.getElementById('recentTransactions').innerHTML = '<div style="padding:20px; text-align:center; color:red;">Error loading</div>';
+            }
+        }
+        
         document.getElementById('employeeId')?.addEventListener('change', (e) => {
             const opt = e.target.options[e.target.selectedIndex];
             document.getElementById('site').value = opt?.getAttribute('data-site') || '';
@@ -355,7 +406,6 @@
             document.getElementById('expenseSite').value = opt?.getAttribute('data-site') || '';
         });
         
-        // Load dues for salary
         document.getElementById('salaryEmployeeId')?.addEventListener('change', async (e) => {
             const empId = e.target.value;
             if (!empId) {
@@ -383,7 +433,6 @@
             }
         }
         
-        // Add Advance
         document.getElementById('advanceForm')?.addEventListener('submit', async (e) => {
             e.preventDefault();
             const empId = document.getElementById('employeeId').value;
@@ -399,11 +448,11 @@
                 e.target.reset();
                 document.getElementById('site').value = '';
                 loadDashboard();
+                loadRecentTransactions();
             }
             setTimeout(() => msgDiv.className = 'message', 3000);
         });
         
-        // Add Expense
         document.getElementById('expenseForm')?.addEventListener('submit', async (e) => {
             e.preventDefault();
             const empId = document.getElementById('expenseEmployeeId').value;
@@ -419,11 +468,11 @@
                 e.target.reset();
                 document.getElementById('expenseSite').value = '';
                 loadDashboard();
+                loadRecentTransactions();
             }
             setTimeout(() => msgDiv.className = 'message', 3000);
         });
         
-        // Add Salary
         document.getElementById('salaryForm')?.addEventListener('submit', async (e) => {
             e.preventDefault();
             const empId = document.getElementById('salaryEmployeeId').value;
@@ -439,6 +488,7 @@
                 e.target.reset();
                 document.getElementById('salaryDuesInfo').style.display = 'none';
                 loadDashboard();
+                loadRecentTransactions();
             }
             setTimeout(() => msgDiv.className = 'message', 3000);
         });
@@ -484,9 +534,9 @@
         
         function logout() { localStorage.removeItem('user'); window.location.href = 'index.html'; }
         
-        // Initialize
         loadEmployees();
         loadDashboard();
+        loadRecentTransactions();
     </script>
 </body>
 </html>
