@@ -4,167 +4,101 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Site Head Dashboard</title>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#1976D2">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f5f5f5;
-            padding: 20px;
+            background: #f0f2f5;
+            padding: 16px;
             padding-bottom: 80px;
         }
-        
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             color: white;
             padding: 20px;
-            border-radius: 15px;
+            border-radius: 24px;
             margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        
-        .header h1 {
-            font-size: 20px;
-        }
-        
         .logout-btn {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.15);
             border: none;
             color: white;
-            padding: 8px 15px;
-            border-radius: 8px;
+            padding: 10px 18px;
+            border-radius: 30px;
             cursor: pointer;
         }
-        
         .site-badge {
             background: rgba(255,255,255,0.2);
-            padding: 5px 10px;
-            border-radius: 8px;
+            padding: 5px 12px;
+            border-radius: 20px;
             font-size: 12px;
-            margin-top: 5px;
+            margin-top: 8px;
             display: inline-block;
         }
-        
         .card {
             background: white;
-            border-radius: 15px;
+            border-radius: 24px;
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
-        
         .card h3 {
-            color: #333;
             margin-bottom: 15px;
             border-left: 4px solid #667eea;
             padding-left: 12px;
         }
-        
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #555;
-            font-size: 14px;
-            font-weight: 500;
-        }
-        
+        .form-group { margin-bottom: 15px; }
+        label { font-weight: 500; margin-bottom: 5px; display: block; }
         select, input {
             width: 100%;
-            padding: 10px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
+            padding: 14px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 16px;
+            font-size: 16px;
         }
-        
-        select:focus, input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        
         button {
+            width: 100%;
+            padding: 14px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 14px;
+            border-radius: 30px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            width: 100%;
         }
-        
-        button:active {
-            transform: scale(0.98);
-        }
-        
-        .info-box {
-            background: #e3f2fd;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 15px;
-        }
-        
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #bbdef5;
-        }
-        
-        .info-row:last-child {
-            border-bottom: none;
-        }
-        
-        .info-label {
-            font-weight: 600;
-            color: #1565c0;
-        }
-        
-        .info-value {
-            color: #333;
-        }
-        
-        .dues-negative {
-            color: #c33;
-            font-weight: bold;
-        }
-        
-        .dues-positive {
-            color: #2e7d32;
-            font-weight: bold;
-        }
-        
+        button:active { transform: scale(0.97); }
         .message {
-            padding: 10px;
-            border-radius: 8px;
+            padding: 12px;
+            border-radius: 16px;
             margin-top: 15px;
             display: none;
         }
-        
-        .message.success {
-            background: #d4edda;
-            color: #155724;
-            display: block;
+        .message.success { background: #d1fae5; color: #065f46; display: block; }
+        .message.error { background: #fee2e2; color: #991b1b; display: block; }
+        .dues-info {
+            background: linear-gradient(135deg, #667eea 10%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 20px;
         }
-        
-        .message.error {
-            background: #f8d7da;
-            color: #721c24;
-            display: block;
+        .dues-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
         }
-        
+        .dues-total {
+            font-size: 24px;
+            font-weight: 800;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 2px solid rgba(255,255,255,0.3);
+        }
         .tab-bar {
             position: fixed;
             bottom: 0;
@@ -173,357 +107,236 @@
             background: white;
             display: flex;
             border-top: 1px solid #e0e0e0;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            padding: 8px 16px 16px;
+            gap: 8px;
         }
-        
         .tab {
             flex: 1;
             text-align: center;
-            padding: 12px;
+            padding: 12px 8px;
             background: none;
             border: none;
             font-size: 12px;
+            font-weight: 500;
+            color: #888;
+            cursor: pointer;
+            border-radius: 30px;
+        }
+        .tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .site-readonly {
+            background: #f5f5f5;
             color: #666;
+            cursor: not-allowed;
+        }
+        .dues-list { max-height: 300px; overflow-y: auto; }
+        .dues-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px;
+            border-bottom: 1px solid #f0f2f5;
             cursor: pointer;
         }
-        
-        .tab.active {
-            color: #667eea;
-            border-top: 3px solid #667eea;
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        .loading-spinner {
-            text-align: center;
-            padding: 20px;
-            color: #667eea;
-        }
+        .dues-item:hover { background: #f8f9fa; }
+        .dues-item-name { font-weight: 600; color: #1a1a2e; }
+        .dues-item-site { font-size: 12px; color: #888; margin-top: 2px; }
+        .dues-item-amount { font-weight: 700; color: #e53935; font-size: 18px; }
     </style>
 </head>
 <body>
     <div class="header">
         <div>
-            <h1 id="companyName">Site Head Dashboard</h1>
-            <div class="site-badge" id="siteBadge">Site: Loading...</div>
+            <h1>🏢 Site Head Dashboard</h1>
+            <div class="site-badge" id="siteBadge">Loading...</div>
         </div>
         <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
-    
+
     <div class="tab-bar">
-        <button class="tab active" onclick="showTab('advance')">Add Advance</button>
-        <button class="tab" onclick="showTab('salary')">Salary Payment</button>
-        <button class="tab" onclick="showTab('employee')">Add Employee</button>
-        <button class="tab" onclick="showTab('dues')">View Dues</button>
+        <button class="tab active" onclick="showTab('advance')">💰 Advance</button>
+        <button class="tab" onclick="showTab('salary')">💵 Salary</button>
+        <button class="tab" onclick="showTab('dues')">📊 Dues</button>
     </div>
-    
-    <!-- Tab 1: Add Advance -->
+
+    <!-- Add Advance Tab -->
     <div id="tab-advance" class="tab-content active">
         <div class="card">
-            <h3>Add Advance Payment</h3>
+            <h3>💰 Add Advance Payment</h3>
             <form id="advanceForm">
                 <div class="form-group">
                     <label>Select Employee</label>
-                    <select id="advanceEmployeeId" required>
-                        <option value="">Loading employees...</option>
-                    </select>
+                    <select id="employeeId" required></select>
+                </div>
+                <div class="form-group">
+                    <label>Site</label>
+                    <input type="text" id="site" readonly class="site-readonly">
                 </div>
                 <div class="form-group">
                     <label>Amount (SAR)</label>
-                    <input type="number" id="advanceAmount" required min="1">
+                    <input type="number" id="amount" required>
                 </div>
                 <div class="form-group">
-                    <label>Notes (Optional)</label>
-                    <input type="text" id="advanceNotes" placeholder="e.g., petrol, food">
+                    <label>Notes</label>
+                    <input type="text" id="notes">
                 </div>
-                <button type="submit">Submit Advance</button>
+                <button type="submit">Add Advance</button>
             </form>
             <div id="advanceMessage" class="message"></div>
         </div>
     </div>
-    
-    <!-- Tab 2: Salary Payment -->
+
+    <!-- Salary Payment Tab -->
     <div id="tab-salary" class="tab-content">
         <div class="card">
-            <h3>Process Salary Payment</h3>
+            <h3>💵 Process Salary Payment</h3>
             <form id="salaryForm">
                 <div class="form-group">
                     <label>Select Employee</label>
-                    <select id="salaryEmployeeId" required>
-                        <option value="">Loading employees...</option>
-                    </select>
+                    <select id="salaryEmployeeId" required></select>
                 </div>
-                <div id="duesInfo" class="info-box" style="display:none;">
-                    <div class="info-row">
-                        <span class="info-label">Monthly Salary:</span>
-                        <span class="info-value" id="displaySalary">-</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Advances This Month:</span>
-                        <span class="info-value" id="displayAdvances">-</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Expenses This Month:</span>
-                        <span class="info-value" id="displayExpenses">-</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Salary Paid This Month:</span>
-                        <span class="info-value" id="displaySalaryPaid">-</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Previous Dues (Carried Over):</span>
-                        <span class="info-value" id="displayCarriedOver">-</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">TOTAL CURRENT DUES:</span>
-                        <span class="info-value" id="displayTotalDues">-</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Suggested Payment (to clear dues):</span>
-                        <span class="info-value" id="displaySuggested">-</span>
+                <div id="salaryDuesInfo" style="display:none;">
+                    <div class="dues-info">
+                        <div class="dues-row"><span>💰 Monthly Salary</span><span id="salaryDisplay">-</span></div>
+                        <div class="dues-row"><span>📈 Advances</span><span id="advancesDisplay">-</span></div>
+                        <div class="dues-row"><span>📊 Expenses</span><span id="expensesDisplay">-</span></div>
+                        <div class="dues-row"><span>💵 Salary Paid</span><span id="paidDisplay">-</span></div>
+                        <div class="dues-total"><span>🎯 TOTAL DUES</span><span id="totalDuesDisplay">-</span></div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label>Amount Paid (SAR)</label>
-                    <input type="number" id="salaryAmount" required min="0">
+                    <input type="number" id="salaryAmount" required>
                 </div>
-                <button type="submit">Record Salary Payment</button>
+                <button type="submit">Record Salary</button>
             </form>
             <div id="salaryMessage" class="message"></div>
         </div>
     </div>
-    
-    <!-- Tab 3: Add Employee -->
-    <div id="tab-employee" class="tab-content">
-        <div class="card">
-            <h3>Add New Employee</h3>
-            <form id="employeeForm">
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" id="employeeName" required>
-                </div>
-                <div class="form-group">
-                    <label>Iqama Number</label>
-                    <input type="text" id="employeeIqama" required>
-                </div>
-                <div class="form-group">
-                    <label>Site</label>
-                    <select id="employeeSite" required>
-                        <option value="">Loading sites...</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Monthly Salary (SAR)</label>
-                    <input type="number" id="employeeSalary" required min="0">
-                </div>
-                <button type="submit">Add Employee</button>
-            </form>
-            <div id="employeeMessage" class="message"></div>
-        </div>
-    </div>
-    
-    <!-- Tab 4: View Dues -->
+
+    <!-- View Dues Tab -->
     <div id="tab-dues" class="tab-content">
         <div class="card">
-            <h3>Employee Dues</h3>
+            <h3>📊 Employee Dues</h3>
             <div class="form-group">
                 <label>Select Employee</label>
-                <select id="duesEmployeeId">
-                    <option value="">Loading employees...</option>
-                </select>
+                <select id="duesEmployeeId" required></select>
             </div>
-            <div id="duesView" class="info-box" style="display:none;">
-                <div class="info-row">
-                    <span class="info-label">Employee:</span>
-                    <span class="info-value" id="viewName">-</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Salary:</span>
-                    <span class="info-value" id="viewSalary">-</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Advances:</span>
-                    <span class="info-value" id="viewAdvances">-</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Expenses:</span>
-                    <span class="info-value" id="viewExpenses">-</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Carried Over:</span>
-                    <span class="info-value" id="viewCarriedOver">-</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Total Dues:</span>
-                    <span class="info-value" id="viewTotalDues">-</span>
-                </div>
+            <div id="duesView" class="dues-info" style="display:none;">
+                <div class="dues-row"><span>💰 Monthly Salary</span><span id="viewSalary">-</span></div>
+                <div class="dues-row"><span>📈 Advances</span><span id="viewAdvances">-</span></div>
+                <div class="dues-row"><span>📊 Expenses</span><span id="viewExpenses">-</span></div>
+                <div class="dues-row"><span>💵 Salary Paid</span><span id="viewPaid">-</span></div>
+                <div class="dues-total"><span>🎯 TOTAL DUES</span><span id="viewTotalDues">-</span></div>
             </div>
         </div>
     </div>
-    
+
     <script>
-        // === YOUR APPS SCRIPT URL ===
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwL1vRskseg8sPLsYEnihHaKbzNP_MB7Y7lbL0QWweYb_Elz3VWmkR80zkF6uK2vwP6/exec';
+        // IMPORTANT: Update this with your Apps Script URL
+        const URL = 'https://script.google.com/macros/s/AKfycbwL1vRskseg8sPLsYEnihHaKbzNP_MB7Y7lbL0QWweYb_Elz3VWmkR80zkF6uK2vwP6/exec';
         
         let currentUser = null;
         let employees = [];
-        let sites = [];
         
-        // Check if user is logged in
+        // Check login and get user data
         const userStr = localStorage.getItem('user');
         if (!userStr) {
             window.location.href = 'index.html';
         }
         currentUser = JSON.parse(userStr);
-        console.log("Site Head logged in as:", currentUser);
+        console.log("Site Head User:", currentUser);
         
-        document.getElementById('siteBadge').textContent = `Site: ${currentUser.site}`;
-        
-        // Load all data when page loads
-        async function loadAllData() {
-            await loadEmployees();
-            await loadSites();
-        }
+        // Display site name
+        document.getElementById('siteBadge').innerHTML = `📍 Site: ${currentUser.site}`;
         
         async function loadEmployees() {
             try {
-                const url = `${APPS_SCRIPT_URL}?action=getEmployees&username=${currentUser.username}&password=${currentUser.password}`;
-                console.log("Fetching employees from:", url);
-                
-                const response = await fetch(url);
+                const response = await fetch(`${URL}?action=getEmployees&username=${currentUser.username}&password=${currentUser.password}`);
                 const data = await response.json();
-                console.log("Employees response:", data);
+                console.log("Employees loaded:", data);
                 
                 if (data.success) {
                     employees = data.employees;
-                    populateEmployeeDropdowns();
-                    return true;
+                    
+                    // Update all dropdowns
+                    const selects = ['employeeId', 'salaryEmployeeId', 'duesEmployeeId'];
+                    selects.forEach(id => {
+                        const select = document.getElementById(id);
+                        if (select) {
+                            select.innerHTML = '<option value="">Select Employee</option>';
+                            employees.forEach(emp => {
+                                const option = document.createElement('option');
+                                option.value = emp.id;
+                                option.setAttribute('data-site', emp.site);
+                                option.textContent = `${emp.name} - ${emp.site} - ${emp.salary} SAR`;
+                                select.appendChild(option);
+                            });
+                        }
+                    });
                 } else {
                     console.error("Failed to load employees:", data.message);
-                    return false;
                 }
             } catch (error) {
                 console.error("Error loading employees:", error);
-                return false;
             }
         }
         
-        function populateEmployeeDropdowns() {
-            const dropdowns = ['advanceEmployeeId', 'salaryEmployeeId', 'duesEmployeeId'];
-            
-            dropdowns.forEach(id => {
-                const select = document.getElementById(id);
-                if (select) {
-                    select.innerHTML = '<option value="">Select Employee</option>';
-                    employees.forEach(emp => {
-                        const option = document.createElement('option');
-                        option.value = emp.id;
-                        option.textContent = `${emp.name} (${emp.site}) - Salary: ${emp.salary}`;
-                        select.appendChild(option);
-                    });
-                }
-            });
-        }
+        // Auto-fill site when employee selected in Advance tab
+        document.getElementById('employeeId')?.addEventListener('change', (e) => {
+            const opt = e.target.options[e.target.selectedIndex];
+            const site = opt?.getAttribute('data-site') || currentUser.site;
+            document.getElementById('site').value = site;
+        });
         
-        async function loadSites() {
-            try {
-                const url = `${APPS_SCRIPT_URL}?action=getSites`;
-                console.log("Fetching sites from:", url);
-                
-                const response = await fetch(url);
-                const data = await response.json();
-                console.log("Sites response:", data);
-                
-                if (data.success) {
-                    sites = data.sites;
-                    const siteSelect = document.getElementById('employeeSite');
-                    if (siteSelect) {
-                        siteSelect.innerHTML = '<option value="">Select Site</option>';
-                        sites.forEach(site => {
-                            const option = document.createElement('option');
-                            option.value = site;
-                            option.textContent = site;
-                            siteSelect.appendChild(option);
-                        });
-                    }
-                    return true;
-                } else {
-                    console.error("Failed to load sites");
-                    return false;
-                }
-            } catch (error) {
-                console.error("Error loading sites:", error);
-                return false;
-            }
-        }
-        
-        // Load dues when employee selected in salary tab
-        document.getElementById('salaryEmployeeId').addEventListener('change', async (e) => {
-            const employeeId = e.target.value;
-            if (!employeeId) {
-                document.getElementById('duesInfo').style.display = 'none';
+        // Load dues when employee selected in Salary tab
+        document.getElementById('salaryEmployeeId')?.addEventListener('change', async (e) => {
+            const empId = e.target.value;
+            if (!empId) {
+                document.getElementById('salaryDuesInfo').style.display = 'none';
                 return;
             }
             
             try {
-                const url = `${APPS_SCRIPT_URL}?action=getDues&employeeId=${employeeId}&username=${currentUser.username}&password=${currentUser.password}`;
-                console.log("Fetching dues from:", url);
-                
-                const response = await fetch(url);
+                const response = await fetch(`${URL}?action=getDues&employeeId=${empId}&username=${currentUser.username}&password=${currentUser.password}`);
                 const data = await response.json();
-                console.log("Dues response:", data);
+                console.log("Dues data:", data);
                 
                 if (data.success) {
-                    document.getElementById('displaySalary').textContent = `${data.salary} SAR`;
-                    document.getElementById('displayAdvances').textContent = `${data.advancesThisMonth} SAR`;
-                    document.getElementById('displayExpenses').textContent = `${data.expensesThisMonth} SAR`;
-                    document.getElementById('displaySalaryPaid').textContent = `${data.salaryPaidThisMonth} SAR`;
-                    document.getElementById('displayCarriedOver').textContent = `${data.carriedOverDues} SAR`;
-                    
-                    const totalDuesElem = document.getElementById('displayTotalDues');
-                    totalDuesElem.textContent = `${data.totalDues} SAR`;
-                    if (data.totalDues < 0) {
-                        totalDuesElem.className = 'dues-negative';
-                    } else {
-                        totalDuesElem.className = 'dues-positive';
-                    }
-                    
-                    document.getElementById('displaySuggested').textContent = `${data.suggestedPayment} SAR`;
-                    document.getElementById('duesInfo').style.display = 'block';
-                } else {
-                    console.error("Failed to load dues:", data.message);
+                    document.getElementById('salaryDisplay').innerText = data.salary + ' SAR';
+                    document.getElementById('advancesDisplay').innerText = data.advancesThisMonth + ' SAR';
+                    document.getElementById('expensesDisplay').innerText = data.expensesThisMonth + ' SAR';
+                    document.getElementById('paidDisplay').innerText = data.salaryPaidThisMonth + ' SAR';
+                    document.getElementById('totalDuesDisplay').innerText = data.totalDues + ' SAR';
+                    document.getElementById('salaryDuesInfo').style.display = 'block';
                 }
             } catch (error) {
                 console.error("Error loading dues:", error);
             }
         });
         
-        // View dues
-        document.getElementById('duesEmployeeId').addEventListener('change', async (e) => {
-            const employeeId = e.target.value;
-            if (!employeeId) {
+        // View dues when employee selected in Dues tab
+        document.getElementById('duesEmployeeId')?.addEventListener('change', async (e) => {
+            const empId = e.target.value;
+            if (!empId) {
                 document.getElementById('duesView').style.display = 'none';
                 return;
             }
             
             try {
-                const url = `${APPS_SCRIPT_URL}?action=getDues&employeeId=${employeeId}&username=${currentUser.username}&password=${currentUser.password}`;
-                const response = await fetch(url);
+                const response = await fetch(`${URL}?action=getDues&employeeId=${empId}&username=${currentUser.username}&password=${currentUser.password}`);
                 const data = await response.json();
                 
                 if (data.success) {
-                    document.getElementById('viewName').textContent = data.employeeName;
-                    document.getElementById('viewSalary').textContent = `${data.salary} SAR`;
-                    document.getElementById('viewAdvances').textContent = `${data.advancesThisMonth} SAR`;
-                    document.getElementById('viewExpenses').textContent = `${data.expensesThisMonth} SAR`;
-                    document.getElementById('viewCarriedOver').textContent = `${data.carriedOverDues} SAR`;
-                    document.getElementById('viewTotalDues').textContent = `${data.totalDues} SAR`;
+                    document.getElementById('viewSalary').innerText = data.salary + ' SAR';
+                    document.getElementById('viewAdvances').innerText = data.advancesThisMonth + ' SAR';
+                    document.getElementById('viewExpenses').innerText = data.expensesThisMonth + ' SAR';
+                    document.getElementById('viewPaid').innerText = data.salaryPaidThisMonth + ' SAR';
+                    document.getElementById('viewTotalDues').innerText = data.totalDues + ' SAR';
                     document.getElementById('duesView').style.display = 'block';
                 }
             } catch (error) {
@@ -531,32 +344,26 @@
             }
         });
         
-        // Add Advance Form
-        document.getElementById('advanceForm').addEventListener('submit', async (e) => {
+        // Add Advance Form Submit
+        document.getElementById('advanceForm')?.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const employeeId = document.getElementById('advanceEmployeeId').value;
-            const employee = employees.find(e => e.id == employeeId);
+            const empId = document.getElementById('employeeId').value;
+            const emp = employees.find(e => e.id == empId);
+            if (!emp) {
+                alert("Please select an employee");
+                return;
+            }
             
-            const data = {
-                action: 'addAdvance',
-                username: currentUser.username,
-                password: currentUser.password,
-                employeeId: employeeId,
-                employeeName: employee?.name,
-                site: currentUser.site,
-                amount: parseFloat(document.getElementById('advanceAmount').value),
-                notes: document.getElementById('advanceNotes').value
-            };
+            const site = document.getElementById('site').value;
+            const amount = document.getElementById('amount').value;
+            const notes = document.getElementById('notes').value;
             
             try {
-                const response = await fetch(APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                });
+                const url = `${URL}?action=addAdvance&username=${currentUser.username}&password=${currentUser.password}&employeeId=${emp.id}&employeeName=${encodeURIComponent(emp.name)}&site=${encodeURIComponent(site)}&amount=${amount}&notes=${encodeURIComponent(notes)}`;
+                console.log("Submitting advance:", url);
+                
+                const response = await fetch(url);
                 const result = await response.json();
                 
                 const msgDiv = document.getElementById('advanceMessage');
@@ -564,53 +371,38 @@
                     msgDiv.className = 'message success';
                     msgDiv.textContent = result.message;
                     document.getElementById('advanceForm').reset();
+                    document.getElementById('site').value = '';
+                    alert('✓ Advance added successfully!');
                 } else {
                     msgDiv.className = 'message error';
                     msgDiv.textContent = result.message;
                 }
-                
-                setTimeout(() => {
-                    msgDiv.className = 'message';
-                }, 3000);
+                setTimeout(() => msgDiv.className = 'message', 3000);
             } catch (error) {
                 console.error("Error:", error);
-                const msgDiv = document.getElementById('advanceMessage');
-                msgDiv.className = 'message error';
-                msgDiv.textContent = 'Network error: ' + error.message;
+                document.getElementById('advanceMessage').className = 'message error';
+                document.getElementById('advanceMessage').textContent = 'Error: ' + error.message;
             }
         });
         
-        // Salary Payment Form
-        document.getElementById('salaryForm').addEventListener('submit', async (e) => {
+        // Salary Payment Form Submit
+        document.getElementById('salaryForm')?.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const employeeId = document.getElementById('salaryEmployeeId').value;
-            const employee = employees.find(e => e.id == employeeId);
+            const empId = document.getElementById('salaryEmployeeId').value;
+            const emp = employees.find(e => e.id == empId);
+            if (!emp) {
+                alert("Please select an employee");
+                return;
+            }
             
-            // Get current dues first
-            const duesUrl = `${APPS_SCRIPT_URL}?action=getDues&employeeId=${employeeId}&username=${currentUser.username}&password=${currentUser.password}`;
-            const duesResponse = await fetch(duesUrl);
-            const duesData = await duesResponse.json();
-            
-            const data = {
-                action: 'addSalaryPayment',
-                username: currentUser.username,
-                password: currentUser.password,
-                employeeId: employeeId,
-                employeeName: employee?.name,
-                site: currentUser.site,
-                amountPaid: parseFloat(document.getElementById('salaryAmount').value),
-                duesBefore: duesData.totalDues || 0
-            };
+            const amountPaid = document.getElementById('salaryAmount').value;
             
             try {
-                const response = await fetch(APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                });
+                const url = `${URL}?action=addSalaryPayment&username=${currentUser.username}&password=${currentUser.password}&employeeId=${emp.id}&employeeName=${encodeURIComponent(emp.name)}&site=${emp.site}&amountPaid=${amountPaid}`;
+                console.log("Submitting salary:", url);
+                
+                const response = await fetch(url);
                 const result = await response.json();
                 
                 const msgDiv = document.getElementById('salaryMessage');
@@ -618,79 +410,25 @@
                     msgDiv.className = 'message success';
                     msgDiv.textContent = result.message;
                     document.getElementById('salaryForm').reset();
-                    document.getElementById('duesInfo').style.display = 'none';
+                    document.getElementById('salaryDuesInfo').style.display = 'none';
+                    alert('✓ Salary recorded successfully!');
                 } else {
                     msgDiv.className = 'message error';
                     msgDiv.textContent = result.message;
                 }
-                
-                setTimeout(() => {
-                    msgDiv.className = 'message';
-                }, 3000);
+                setTimeout(() => msgDiv.className = 'message', 3000);
             } catch (error) {
                 console.error("Error:", error);
-                const msgDiv = document.getElementById('salaryMessage');
-                msgDiv.className = 'message error';
-                msgDiv.textContent = 'Network error: ' + error.message;
-            }
-        });
-        
-        // Add Employee Form
-        document.getElementById('employeeForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const data = {
-                action: 'addEmployee',
-                username: currentUser.username,
-                password: currentUser.password,
-                name: document.getElementById('employeeName').value,
-                iqamaNo: document.getElementById('employeeIqama').value,
-                site: document.getElementById('employeeSite').value,
-                salary: parseFloat(document.getElementById('employeeSalary').value)
-            };
-            
-            try {
-                const response = await fetch(APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                });
-                const result = await response.json();
-                
-                const msgDiv = document.getElementById('employeeMessage');
-                if (result.success) {
-                    msgDiv.className = 'message success';
-                    msgDiv.textContent = `${result.message}. Employee ID: ${result.employeeId}`;
-                    document.getElementById('employeeForm').reset();
-                    loadEmployees();
-                } else {
-                    msgDiv.className = 'message error';
-                    msgDiv.textContent = result.message;
-                }
-                
-                setTimeout(() => {
-                    msgDiv.className = 'message';
-                }, 3000);
-            } catch (error) {
-                console.error("Error:", error);
-                const msgDiv = document.getElementById('employeeMessage');
-                msgDiv.className = 'message error';
-                msgDiv.textContent = 'Network error: ' + error.message;
+                document.getElementById('salaryMessage').className = 'message error';
+                document.getElementById('salaryMessage').textContent = 'Error: ' + error.message;
             }
         });
         
         function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.getElementById(`tab-${tabName}`).classList.add('active');
-            event.target.classList.add('active');
+            if (event?.target) event.target.classList.add('active');
         }
         
         function logout() {
@@ -698,8 +436,8 @@
             window.location.href = 'index.html';
         }
         
-        // Start loading data
-        loadAllData();
+        // Initialize
+        loadEmployees();
     </script>
 </body>
 </html>
