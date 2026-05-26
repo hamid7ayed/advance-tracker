@@ -6,285 +6,48 @@
     <title>Accounts Dashboard</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f0f2f5;
-            padding: 16px;
-            padding-bottom: 80px;
-        }
-        .header {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 24px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .logout-btn {
-            background: rgba(255,255,255,0.15);
-            border: none;
-            color: white;
-            padding: 10px 18px;
-            border-radius: 30px;
-            cursor: pointer;
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 14px;
-            margin-bottom: 24px;
-        }
-        .stat-card {
-            background: white;
-            padding: 20px;
-            border-radius: 24px;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        }
-        .stat-number {
-            font-size: 34px;
-            font-weight: 800;
-            color: #1a1a2e;
-            margin-bottom: 8px;
-        }
-        .stat-label {
-            font-size: 12px;
-            color: #718096;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .card {
-            background: white;
-            border-radius: 24px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #f0f2f5;
-        }
-        .card-header h3 { font-size: 18px; color: #1a1a2e; }
-        .refresh-btn {
-            background: #10b981;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 30px;
-            font-size: 12px;
-            cursor: pointer;
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f0f2f5; padding: 16px; padding-bottom: 80px; }
+        .header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white; padding: 20px; border-radius: 24px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .logout-btn { background: rgba(255,255,255,0.15); border: none; color: white; padding: 10px 18px; border-radius: 30px; cursor: pointer; }
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 24px; }
+        .stat-card { background: white; padding: 20px; border-radius: 24px; text-align: center; }
+        .stat-number { font-size: 34px; font-weight: 800; color: #1a1a2e; }
+        .stat-label { font-size: 12px; color: #718096; }
+        .card { background: white; border-radius: 24px; padding: 20px; margin-bottom: 20px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #f0f2f5; }
+        .card-header h3 { font-size: 18px; }
+        .refresh-btn { background: #10b981; color: white; border: none; padding: 8px 16px; border-radius: 30px; font-size: 12px; cursor: pointer; }
         .form-group { margin-bottom: 15px; }
         label { font-weight: 500; margin-bottom: 5px; display: block; }
-        select, input {
-            width: 100%;
-            padding: 14px 16px;
-            border: 1px solid #e0e0e0;
-            border-radius: 16px;
-            font-size: 16px;
-        }
-        .btn {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 30px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-        }
+        select, input { width: 100%; padding: 14px 16px; border: 1px solid #e0e0e0; border-radius: 16px; font-size: 16px; }
+        .btn { width: 100%; padding: 14px; border: none; border-radius: 30px; font-size: 16px; font-weight: 600; cursor: pointer; }
         .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
         .btn-success { background: #10b981; color: white; }
-        .message {
-            padding: 12px;
-            border-radius: 16px;
-            margin-top: 15px;
-            display: none;
-        }
+        .message { padding: 12px; border-radius: 16px; margin-top: 15px; display: none; }
         .message.success { background: #d1fae5; color: #065f46; display: block; }
         .message.error { background: #fee2e2; color: #991b1b; display: block; }
-        
-        /* ===== FIXED DUES LIST STYLES - WITH GAP ===== */
-.dues-list {
-    max-height: 450px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding: 4px;
-}
-
-.dues-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 18px 20px;
-    background: white;
-    border-radius: 24px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-    border: 1px solid #edf2f7;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.dues-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    border-color: #667eea;
-}
-
-.dues-item-info {
-    flex: 2;
-}
-
-.dues-item-name {
-    font-weight: 700;
-    font-size: 17px;
-    color: #1a1a2e;
-    margin-bottom: 6px;
-}
-
-.dues-item-site {
-    font-size: 12px;
-    color: #718096;
-    background: #f7fafc;
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 30px;
-}
-
-.dues-item-amount {
-    flex: 1;
-    text-align: right;
-    font-weight: 800;
-    font-size: 22px;
-    padding: 10px 20px;
-    border-radius: 50px;
-    min-width: 130px;
-}
-
-.dues-item-amount.positive {
-    background: #fee2e2;
-    color: #dc2626;
-}
-
-.dues-item-amount.negative {
-    background: #d1fae5;
-    color: #059669;
-}
-        
-        .transaction-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid #f0f2f5;
-        }
-        .tab-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            display: flex;
-            border-top: 1px solid #e0e0e0;
-            padding: 8px 16px 16px;
-            gap: 8px;
-        }
-        .tab {
-            flex: 1;
-            text-align: center;
-            padding: 12px 8px;
-            background: none;
-            border: none;
-            font-size: 12px;
-            font-weight: 500;
-            color: #888;
-            cursor: pointer;
-            border-radius: 30px;
-        }
-        .tab.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
+        .dues-list { display: flex; flex-direction: column; gap: 12px; max-height: 400px; overflow-y: auto; }
+        .dues-item { display: flex; justify-content: space-between; align-items: center; padding: 16px; background: white; border-radius: 20px; border: 1px solid #edf2f7; cursor: pointer; }
+        .dues-item-name { font-weight: 700; font-size: 16px; }
+        .dues-item-site { font-size: 12px; color: #888; margin-top: 4px; }
+        .dues-item-amount { font-weight: 800; font-size: 20px; background: #fee2e2; padding: 8px 16px; border-radius: 40px; color: #dc2626; }
+        .transaction-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f0f2f5; }
+        .tab-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; border-top: 1px solid #e0e0e0; padding: 8px 16px 16px; gap: 8px; }
+        .tab { flex: 1; text-align: center; padding: 12px 8px; background: none; border: none; font-size: 12px; font-weight: 500; color: #888; cursor: pointer; border-radius: 30px; }
+        .tab.active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        .dues-info {
-            background: linear-gradient(135deg, #667eea 10%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 20px;
-            margin-bottom: 20px;
-        }
-        .dues-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-        }
-        .dues-total {
-            font-size: 24px;
-            font-weight: 800;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 2px solid rgba(255,255,255,0.3);
-        }
-        .site-readonly {
-            background: #f5f5f5;
-            color: #666;
-            cursor: not-allowed;
-        }
+        .dues-info { background: linear-gradient(135deg, #667eea 10%, #764ba2 100%); color: white; padding: 20px; border-radius: 20px; margin-bottom: 20px; }
+        .dues-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.2); }
+        .dues-total { font-size: 24px; font-weight: 800; margin-top: 10px; padding-top: 10px; border-top: 2px solid rgba(255,255,255,0.3); }
+        .site-readonly { background: #f5f5f5; color: #666; cursor: not-allowed; }
         .employee-list { max-height: 400px; overflow-y: auto; }
-        .employee-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px;
-            border-bottom: 1px solid #f0f2f5;
-        }
-        .edit-employee-btn {
-            background: #f59e0b;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 20px;
-            color: white;
-            cursor: pointer;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        .modal-content {
-            background: white;
-            padding: 24px;
-            border-radius: 28px;
-            width: 90%;
-            max-width: 400px;
-        }
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .close-modal {
-            font-size: 28px;
-            cursor: pointer;
-            color: #888;
-        }
+        .employee-item { display: flex; justify-content: space-between; align-items: center; padding: 14px; border-bottom: 1px solid #f0f2f5; }
+        .edit-employee-btn { background: #f59e0b; border: none; padding: 6px 12px; border-radius: 20px; color: white; cursor: pointer; }
+        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: white; padding: 24px; border-radius: 28px; width: 90%; max-width: 400px; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .close-modal { font-size: 28px; cursor: pointer; color: #888; }
         .btn-save { background: #10b981; margin-top: 10px; }
     </style>
 </head>
@@ -307,6 +70,7 @@
         <button class="tab" onclick="showTab('employee')">👥 Employee</button>
     </div>
 
+    <!-- Dashboard Tab -->
     <div id="tab-dashboard" class="tab-content active">
         <div class="card">
             <div class="card-header"><h3>⚠️ Outstanding Dues</h3><button class="refresh-btn" onclick="loadDashboard()">🔄 Refresh</button></div>
@@ -314,12 +78,14 @@
         </div>
         <div class="card">
             <div class="card-header"><h3>📋 Recent Transactions</h3><button class="refresh-btn" onclick="loadRecentTransactions()">🔄 Refresh</button></div>
-            <div id="recentTransactions" class="dues-list">Loading...</div>
+            <div id="recentTransactions">Loading...</div>
         </div>
     </div>
 
+    <!-- Add Advance Tab -->
     <div id="tab-advance" class="tab-content">
-        <div class="card"><h3>💰 Add Advance</h3>
+        <div class="card">
+            <h3>💰 Add Advance</h3>
             <form id="advanceForm">
                 <div class="form-group"><label>Employee</label><select id="employeeId" required></select></div>
                 <div class="form-group"><label>Site</label><input type="text" id="site" readonly class="site-readonly"></div>
@@ -331,8 +97,10 @@
         </div>
     </div>
 
+    <!-- Add Expense Tab -->
     <div id="tab-expense" class="tab-content">
-        <div class="card"><h3>📝 Add Expense</h3>
+        <div class="card">
+            <h3>📝 Add Expense</h3>
             <form id="expenseForm">
                 <div class="form-group"><label>Employee</label><select id="expenseEmployeeId" required></select></div>
                 <div class="form-group"><label>Site</label><input type="text" id="expenseSite" readonly class="site-readonly"></div>
@@ -344,8 +112,10 @@
         </div>
     </div>
 
+    <!-- Salary Payment Tab -->
     <div id="tab-salary" class="tab-content">
-        <div class="card"><h3>💵 Process Salary</h3>
+        <div class="card">
+            <h3>💵 Process Salary</h3>
             <form id="salaryForm">
                 <div class="form-group"><label>Employee</label><select id="salaryEmployeeId" required></select></div>
                 <div id="salaryDuesInfo" style="display:none;">
@@ -364,29 +134,45 @@
         </div>
     </div>
 
+    <!-- Employee Tab -->
     <div id="tab-employee" class="tab-content">
         <div class="card">
-            <div class="card-header"><h3>👥 Employees</h3><button class="refresh-btn" onclick="openAddEmployeeModal()">➕ Add</button></div>
+            <div class="card-header"><h3>👥 All Employees</h3><button class="refresh-btn" onclick="openAddEmployeeModal()">➕ Add Employee</button></div>
             <div id="employeeList" class="employee-list">Loading...</div>
         </div>
     </div>
 
-    <!-- Add/Edit Modals -->
-    <div id="addEmployeeModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>➕ Add Employee</h3><span class="close-modal" onclick="closeAddEmployeeModal()">&times;</span></div>
-        <form id="addEmployeeForm"><div class="form-group"><label>Name</label><input type="text" id="newName" required></div>
-        <div class="form-group"><label>Iqama</label><input type="text" id="newIqama" required></div>
-        <div class="form-group"><label>Site</label><select id="newSite" required></select></div>
-        <div class="form-group"><label>Salary</label><input type="number" id="newSalary" required></div>
-        <button type="submit" class="btn-save">Add</button></form><div id="addMessage" class="message"></div></div></div>
+    <!-- Add Employee Modal -->
+    <div id="addEmployeeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header"><h3>➕ Add Employee</h3><span class="close-modal" onclick="closeAddEmployeeModal()">&times;</span></div>
+            <form id="addEmployeeForm">
+                <div class="form-group"><label>Name</label><input type="text" id="newName" required></div>
+                <div class="form-group"><label>Iqama Number</label><input type="text" id="newIqama" required></div>
+                <div class="form-group"><label>Site</label><select id="newSite" required></select></div>
+                <div class="form-group"><label>Salary</label><input type="number" id="newSalary" required></div>
+                <button type="submit" class="btn-save">Add Employee</button>
+            </form>
+            <div id="addMessage" class="message"></div>
+        </div>
+    </div>
 
-    <div id="editEmployeeModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>✏️ Edit Employee</h3><span class="close-modal" onclick="closeEditEmployeeModal()">&times;</span></div>
-        <form id="editEmployeeForm"><input type="hidden" id="editId">
-        <div class="form-group"><label>Name</label><input type="text" id="editName" required></div>
-        <div class="form-group"><label>Iqama</label><input type="text" id="editIqama" required></div>
-        <div class="form-group"><label>Site</label><select id="editSite" required></select></div>
-        <div class="form-group"><label>Salary</label><input type="number" id="editSalary" required></div>
-        <div class="form-group"><label>Status</label><select id="editStatus"><option>Active</option><option>Inactive</option></select></div>
-        <button type="submit" class="btn-save">Save</button></form><div id="editMessage" class="message"></div></div></div>
+    <!-- Edit Employee Modal -->
+    <div id="editEmployeeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header"><h3>✏️ Edit Employee</h3><span class="close-modal" onclick="closeEditEmployeeModal()">&times;</span></div>
+            <form id="editEmployeeForm">
+                <input type="hidden" id="editId">
+                <div class="form-group"><label>Name</label><input type="text" id="editName" required></div>
+                <div class="form-group"><label>Iqama</label><input type="text" id="editIqama" required></div>
+                <div class="form-group"><label>Site</label><select id="editSite" required></select></div>
+                <div class="form-group"><label>Salary</label><input type="number" id="editSalary" required></div>
+                <div class="form-group"><label>Status</label><select id="editStatus"><option>Active</option><option>Inactive</option></select></div>
+                <button type="submit" class="btn-save">Save</button>
+            </form>
+            <div id="editMessage" class="message"></div>
+        </div>
+    </div>
 
     <script>
         const URL = 'https://script.google.com/macros/s/AKfycbynF_UWp8kkfv_J6K6kxAj0DgEHcb9VniO7u_EHM9GwGb-ZitGRyFxLvmSeaontcfxL/exec';
@@ -399,7 +185,7 @@
         async function loadSites() {
             const response = await fetch(`${URL}?action=getSites`);
             const data = await response.json();
-            sites = data.success ? data.sites : ['Shabab1', 'Shabab2', 'Shabab3', 'Shabab4', 'Like1', 'Like2'];
+            sites = data.success ? data.sites : ['Shabab1', 'Shabab2', 'Shabab3', 'Shabab4'];
             ['newSite', 'editSite'].forEach(id => {
                 const select = document.getElementById(id);
                 if (select) {
@@ -424,7 +210,7 @@
                             const opt = document.createElement('option');
                             opt.value = emp.id;
                             opt.setAttribute('data-site', emp.site);
-                            opt.textContent = `${emp.name} - ${emp.site} - ${emp.salary} SAR | Iqama: ${emp.iqama}`;
+                            opt.textContent = `${emp.name} | ${emp.site} | ${emp.salary} SAR | Iqama: ${emp.iqama}`;
                             select.appendChild(opt);
                         });
                     }
@@ -444,22 +230,16 @@
             const data = await response.json();
             const container = document.getElementById('outstandingList');
             let totalOutstanding = 0;
-            
             if (data.success && data.outstandingEmployees && data.outstandingEmployees.length > 0) {
                 container.innerHTML = data.outstandingEmployees.map(emp => `
                     <div class="dues-item" onclick="selectForSalary('${emp.id}')">
-                        <div class="dues-item-info">
-                            <div class="dues-item-name">${emp.name}</div>
-                            <div class="dues-item-site">${emp.site}</div>
-                        </div>
-                        <div class="dues-item-amount ${emp.dues < 0 ? 'negative' : 'positive'}">
-                            ${emp.dues.toLocaleString()} SAR
-                        </div>
+                        <div><div class="dues-item-name">${emp.name}</div><div class="dues-item-site">${emp.site}</div></div>
+                        <div class="dues-item-amount">${emp.dues} SAR</div>
                     </div>
                 `).join('');
                 totalOutstanding = data.outstandingEmployees.reduce((sum, emp) => sum + emp.dues, 0);
             } else {
-                container.innerHTML = '<div style="padding:40px; text-align:center;">✅ No outstanding dues</div>';
+                container.innerHTML = '<div style="padding:20px; text-align:center;">✅ No outstanding dues</div>';
             }
             document.getElementById('totalOutstanding').innerText = totalOutstanding.toLocaleString();
         }
@@ -472,7 +252,7 @@
                 container.innerHTML = data.transactions.map(t => `
                     <div class="transaction-item">
                         <div><strong>${t.employeeName}</strong><br><small>${t.site} | ${new Date(t.date).toLocaleDateString()}</small></div>
-                        <div style="font-weight:700;">${t.amount} SAR</div>
+                        <div><strong>${t.amount} SAR</strong></div>
                     </div>
                 `).join('');
             } else {
@@ -518,7 +298,7 @@
             const msg = document.getElementById('advanceMessage');
             msg.className = result.success ? 'message success' : 'message error';
             msg.textContent = result.message;
-            if (result.success) { document.getElementById('advanceForm').reset(); document.getElementById('site').value = ''; loadDashboard(); alert('✓ Added'); }
+            if (result.success) { document.getElementById('advanceForm').reset(); document.getElementById('site').value = ''; loadDashboard(); }
             setTimeout(() => msg.className = 'message', 3000);
         });
         
@@ -531,7 +311,7 @@
             const msg = document.getElementById('expenseMessage');
             msg.className = result.success ? 'message success' : 'message error';
             msg.textContent = result.message;
-            if (result.success) { document.getElementById('expenseForm').reset(); document.getElementById('expenseSite').value = ''; loadDashboard(); alert('✓ Added'); }
+            if (result.success) { document.getElementById('expenseForm').reset(); document.getElementById('expenseSite').value = ''; loadDashboard(); }
             setTimeout(() => msg.className = 'message', 3000);
         });
         
@@ -544,18 +324,34 @@
             const msg = document.getElementById('salaryMessage');
             msg.className = result.success ? 'message success' : 'message error';
             msg.textContent = result.message;
-            if (result.success) { document.getElementById('salaryForm').reset(); document.getElementById('salaryDuesInfo').style.display = 'none'; loadDashboard(); alert('✓ Recorded'); }
+            if (result.success) { document.getElementById('salaryForm').reset(); document.getElementById('salaryDuesInfo').style.display = 'none'; loadDashboard(); }
             setTimeout(() => msg.className = 'message', 3000);
+        });
+        
+        // Add Employee with Alert
+        document.getElementById('addEmployeeForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('newName').value;
+            const iqama = document.getElementById('newIqama').value;
+            const site = document.getElementById('newSite').value;
+            const salary = document.getElementById('newSalary').value;
+            
+            const url = `${URL}?action=addEmployee&username=${currentUser.username}&password=${currentUser.password}&name=${encodeURIComponent(name)}&iqamaNo=${encodeURIComponent(iqama)}&site=${encodeURIComponent(site)}&salary=${salary}`;
+            const response = await fetch(url);
+            const result = await response.json();
+            
+            if (result.success) {
+                alert("✅ " + result.message);
+                closeAddEmployeeModal();
+                loadEmployees();
+                document.getElementById('addEmployeeForm').reset();
+            } else {
+                alert("❌ " + result.message);
+            }
         });
         
         function openAddEmployeeModal() { document.getElementById('addEmployeeModal').style.display = 'flex'; }
         function closeAddEmployeeModal() { document.getElementById('addEmployeeModal').style.display = 'none'; }
-        document.getElementById('addEmployeeForm')?.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const res = await fetch(`${URL}?action=addEmployee&username=${currentUser.username}&password=${currentUser.password}&name=${encodeURIComponent(document.getElementById('newName').value)}&iqamaNo=${encodeURIComponent(document.getElementById('newIqama').value)}&site=${encodeURIComponent(document.getElementById('newSite').value)}&salary=${document.getElementById('newSalary').value}`);
-            const result = await res.json();
-            if (result.success) { closeAddEmployeeModal(); loadEmployees(); alert('✓ Employee added'); }
-        });
         
         async function openEditEmployeeModal(id) {
             const emp = employees.find(e => e.id == id);
@@ -569,11 +365,19 @@
             document.getElementById('editEmployeeModal').style.display = 'flex';
         }
         function closeEditEmployeeModal() { document.getElementById('editEmployeeModal').style.display = 'none'; }
+        
         document.getElementById('editEmployeeForm')?.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const res = await fetch(`${URL}?action=updateEmployee&username=${currentUser.username}&password=${currentUser.password}&employeeId=${document.getElementById('editId').value}&name=${encodeURIComponent(document.getElementById('editName').value)}&iqamaNo=${encodeURIComponent(document.getElementById('editIqama').value)}&site=${encodeURIComponent(document.getElementById('editSite').value)}&salary=${document.getElementById('editSalary').value}&status=${document.getElementById('editStatus').value}`);
-            const result = await res.json();
-            if (result.success) { closeEditEmployeeModal(); loadEmployees(); alert('✓ Employee updated'); }
+            const url = `${URL}?action=updateEmployee&username=${currentUser.username}&password=${currentUser.password}&employeeId=${document.getElementById('editId').value}&name=${encodeURIComponent(document.getElementById('editName').value)}&iqamaNo=${encodeURIComponent(document.getElementById('editIqama').value)}&site=${encodeURIComponent(document.getElementById('editSite').value)}&salary=${document.getElementById('editSalary').value}&status=${document.getElementById('editStatus').value}`;
+            const response = await fetch(url);
+            const result = await response.json();
+            if (result.success) {
+                alert("✅ " + result.message);
+                closeEditEmployeeModal();
+                loadEmployees();
+            } else {
+                alert("❌ " + result.message);
+            }
         });
         
         function showTab(name) {
