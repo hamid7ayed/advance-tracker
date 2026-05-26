@@ -17,6 +17,7 @@
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #f0f2f5; }
         .card-header h3 { font-size: 18px; }
         .refresh-btn { background: #10b981; color: white; border: none; padding: 8px 16px; border-radius: 30px; font-size: 12px; cursor: pointer; }
+        .danger-btn { background: #dc2626; color: white; border: none; padding: 8px 16px; border-radius: 30px; font-size: 12px; cursor: pointer; }
         .form-group { margin-bottom: 15px; }
         label { font-weight: 500; margin-bottom: 5px; display: block; }
         select, input { width: 100%; padding: 14px 16px; border: 1px solid #e0e0e0; border-radius: 16px; font-size: 16px; }
@@ -32,14 +33,18 @@
         .dues-item-site { font-size: 12px; color: #888; margin-top: 4px; }
         .dues-item-amount { font-weight: 800; font-size: 20px; background: #fee2e2; padding: 8px 16px; border-radius: 40px; color: #dc2626; }
         .transaction-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f0f2f5; }
-        .tab-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; border-top: 1px solid #e0e0e0; padding: 8px 16px 16px; gap: 8px; }
-        .tab { flex: 1; text-align: center; padding: 12px 8px; background: none; border: none; font-size: 12px; font-weight: 500; color: #888; cursor: pointer; border-radius: 30px; }
+        .tab-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; border-top: 1px solid #e0e0e0; padding: 8px 16px 16px; gap: 8px; overflow-x: auto; }
+        .tab { flex: 1; text-align: center; padding: 12px 8px; background: none; border: none; font-size: 12px; font-weight: 500; color: #888; cursor: pointer; border-radius: 30px; white-space: nowrap; }
         .tab.active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         .dues-info { background: linear-gradient(135deg, #667eea 10%, #764ba2 100%); color: white; padding: 20px; border-radius: 20px; margin-bottom: 20px; }
-        .dues-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.2); }
-        .dues-total { font-size: 24px; font-weight: 800; margin-top: 10px; padding-top: 10px; border-top: 2px solid rgba(255,255,255,0.3); }
+        .dues-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.15); }
+        .dues-row span:first-child { font-size: 14px; opacity: 0.9; }
+        .dues-row span:last-child { font-size: 18px; font-weight: 700; }
+        .dues-total { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; padding-top: 12px; border-top: 2px solid rgba(255,255,255,0.3); }
+        .dues-total span:first-child { font-size: 16px; font-weight: 600; }
+        .dues-total span:last-child { font-size: 24px; font-weight: 800; }
         .site-readonly { background: #f5f5f5; color: #666; cursor: not-allowed; }
         .employee-list { max-height: 400px; overflow-y: auto; }
         .employee-item { display: flex; justify-content: space-between; align-items: center; padding: 14px; border-bottom: 1px solid #f0f2f5; }
@@ -49,6 +54,17 @@
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .close-modal { font-size: 28px; cursor: pointer; color: #888; }
         .btn-save { background: #10b981; margin-top: 10px; }
+        /* History Styles */
+        .history-item { background: white; border-radius: 16px; margin-bottom: 12px; overflow: hidden; border: 1px solid #e0e0e0; }
+        .history-header { display: flex; justify-content: space-between; align-items: center; padding: 16px; background: #f8f9fa; cursor: pointer; font-weight: 600; }
+        .history-header span:first-child { color: #667eea; }
+        .history-header span:nth-child(2) { color: #dc2626; }
+        .toggle-icon { color: #888; font-size: 12px; }
+        .history-details { padding: 12px; background: white; border-top: 1px solid #e0e0e0; }
+        .history-employee { display: flex; justify-content: space-between; padding: 10px 8px; border-bottom: 1px solid #f0f2f5; }
+        .history-employee:last-child { border-bottom: none; }
+        .history-employee .dues-amount { font-weight: 700; color: #dc2626; }
+        .warning-box { background: #fef3c7; padding: 15px; border-radius: 16px; margin-bottom: 20px; border-left: 4px solid #f59e0b; }
     </style>
 </head>
 <body>
@@ -68,8 +84,11 @@
         <button class="tab" onclick="showTab('expense')">📝 Expense</button>
         <button class="tab" onclick="showTab('salary')">💵 Salary</button>
         <button class="tab" onclick="showTab('employee')">👥 Employee</button>
+        <button class="tab" onclick="showTab('monthend')">📆 Month End</button>
+        <button class="tab" onclick="showTab('history')">📜 History</button>
     </div>
 
+    <!-- Dashboard Tab -->
     <div id="tab-dashboard" class="tab-content active">
         <div class="card">
             <div class="card-header"><h3>⚠️ Outstanding Dues</h3><button class="refresh-btn" onclick="loadDashboard()">🔄 Refresh</button></div>
@@ -81,6 +100,7 @@
         </div>
     </div>
 
+    <!-- Add Advance Tab -->
     <div id="tab-advance" class="tab-content">
         <div class="card">
             <h3>💰 Add Advance</h3>
@@ -95,6 +115,7 @@
         </div>
     </div>
 
+    <!-- Add Expense Tab -->
     <div id="tab-expense" class="tab-content">
         <div class="card">
             <h3>📝 Add Expense</h3>
@@ -109,6 +130,7 @@
         </div>
     </div>
 
+    <!-- Salary Payment Tab -->
     <div id="tab-salary" class="tab-content">
         <div class="card">
             <h3>💵 Process Salary</h3>
@@ -130,10 +152,35 @@
         </div>
     </div>
 
+    <!-- Employee Tab -->
     <div id="tab-employee" class="tab-content">
         <div class="card">
             <div class="card-header"><h3>👥 All Employees</h3><button class="refresh-btn" onclick="openAddEmployeeModal()">➕ Add Employee</button></div>
             <div id="employeeList" class="employee-list">Loading...</div>
+        </div>
+    </div>
+
+    <!-- Month End Tab -->
+    <div id="tab-monthend" class="tab-content">
+        <div class="card">
+            <div class="card-header"><h3>📆 Month End Processing</h3></div>
+            <div class="warning-box">
+                ⚠️ <strong>Warning:</strong> Running month-end will:<br>
+                • Calculate final dues for all employees<br>
+                • Archive current month data<br>
+                • Clear current month for next period<br>
+                • This action cannot be undone!
+            </div>
+            <button id="runMonthEndBtn" class="btn btn-primary" style="background:#dc2626;" onclick="runMonthEnd()">🔒 Run Month End Process</button>
+            <div id="monthEndMessage" class="message"></div>
+        </div>
+    </div>
+
+    <!-- History Tab -->
+    <div id="tab-history" class="tab-content">
+        <div class="card">
+            <div class="card-header"><h3>📜 Month End History</h3><button class="refresh-btn" onclick="loadMonthEndReports()">🔄 Refresh</button></div>
+            <div id="historyList" class="dues-list">Loading...</div>
         </div>
     </div>
 
@@ -170,7 +217,7 @@
     </div>
 
     <script>
-        const URL = 'https://script.google.com/macros/s/AKfycbysUJPb-0W67SoWAgkK7MKeN1rfaUOA2kk39s0ZT4O-aQRb51RoIzKce7FWLXtv4MKN/exec';
+        const URL = 'https://script.google.com/macros/s/AKfycbzYXVGW9KTdfjTuiS0yxeSetkAPBinWRO086pVCyh7yWaYWuD1i80WMHVTQMJfquIk/exec';
         let currentUser = null, employees = [], sites = [];
         
         const userStr = localStorage.getItem('user');
@@ -255,6 +302,43 @@
             }
         }
         
+        async function loadMonthEndReports() {
+            const response = await fetch(`${URL}?action=getMonthEndReports&username=${currentUser.username}&password=${currentUser.password}`);
+            const data = await response.json();
+            const container = document.getElementById('historyList');
+            
+            if (data.success && data.reports && data.reports.length > 0) {
+                container.innerHTML = data.reports.map(report => `
+                    <div class="history-item">
+                        <div class="history-header" onclick="toggleReport('${report.month}')">
+                            <span>📅 ${report.month}</span>
+                            <span>💰 ${report.totalDues.toLocaleString()} SAR</span>
+                            <span>👥 ${report.employees.length} employees</span>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div id="report-${report.month}" class="history-details" style="display:none;">
+                            ${report.employees.map(emp => `
+                                <div class="history-employee">
+                                    <span>${emp.name}</span>
+                                    <span>${emp.site}</span>
+                                    <span class="dues-amount">${emp.dues} SAR</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                container.innerHTML = '<div style="padding:20px; text-align:center;">📭 No month-end reports yet. Run month-end first.</div>';
+            }
+        }
+        
+        function toggleReport(month) {
+            var details = document.getElementById(`report-${month}`);
+            if (details) {
+                details.style.display = details.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+        
         document.getElementById('employeeId')?.addEventListener('change', (e) => {
             const opt = e.target.options[e.target.selectedIndex];
             document.getElementById('site').value = opt?.getAttribute('data-site') || '';
@@ -323,18 +407,22 @@
             setTimeout(() => msg.className = 'message', 3000);
         });
         
-        // Add Employee with ALERT
+        async function runMonthEnd() {
+            if (!confirm('⚠️ WARNING: This will close the current month and archive all data. This action cannot be undone! Are you sure?')) return;
+            const res = await fetch(`${URL}?action=runMonthEnd&username=${currentUser.username}&password=${currentUser.password}`);
+            const result = await res.json();
+            const msg = document.getElementById('monthEndMessage');
+            msg.className = result.success ? 'message success' : 'message error';
+            msg.textContent = result.message;
+            if (result.success) { loadDashboard(); loadMonthEndReports(); }
+            setTimeout(() => msg.className = 'message', 5000);
+        }
+        
         document.getElementById('addEmployeeForm')?.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const name = document.getElementById('newName').value;
-            const iqama = document.getElementById('newIqama').value;
-            const site = document.getElementById('newSite').value;
-            const salary = document.getElementById('newSalary').value;
-            
-            const url = `${URL}?action=addEmployee&username=${currentUser.username}&password=${currentUser.password}&name=${encodeURIComponent(name)}&iqamaNo=${encodeURIComponent(iqama)}&site=${encodeURIComponent(site)}&salary=${salary}`;
+            const url = `${URL}?action=addEmployee&username=${currentUser.username}&password=${currentUser.password}&name=${encodeURIComponent(document.getElementById('newName').value)}&iqamaNo=${encodeURIComponent(document.getElementById('newIqama').value)}&site=${encodeURIComponent(document.getElementById('newSite').value)}&salary=${document.getElementById('newSalary').value}`;
             const response = await fetch(url);
             const result = await response.json();
-            
             if (result.success) {
                 alert("✅ " + result.message);
                 closeAddEmployeeModal();
@@ -387,6 +475,7 @@
         loadEmployees();
         loadDashboard();
         loadRecentTransactions();
+        loadMonthEndReports();
     </script>
 </body>
 </html>
