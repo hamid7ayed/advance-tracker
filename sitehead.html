@@ -270,7 +270,7 @@
         </div>
     </div>
 
-    <!-- Employees Tab (with Add Employee) -->
+    <!-- Employees Tab -->
     <div id="tab-employee" class="tab-content">
         <div class="card">
             <div class="card-header">
@@ -282,20 +282,22 @@
     </div>
 
     <!-- Add Employee Modal -->
-<div id="addEmployeeModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3>➕ Add Employee</h3>
-            <span class="close-modal" onclick="closeAddEmployeeModal()">&times;</span>
+    <div id="addEmployeeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>➕ Add New Employee</h3>
+                <span class="close-modal" onclick="closeAddEmployeeModal()">&times;</span>
+            </div>
+            <form id="addEmployeeForm">
+                <div class="form-group"><label>Full Name</label><input type="text" id="newName" required></div>
+                <div class="form-group"><label>Iqama Number</label><input type="text" id="newIqama" required></div>
+                <div class="form-group"><label>Salary (SAR)</label><input type="number" id="newSalary" required></div>
+                <button type="submit">Add Employee</button>
+            </form>
+            <div id="addMessage" class="message"></div>
         </div>
-        <form id="addEmployeeForm">
-            <div class="form-group"><label>Name</label><input type="text" id="newName" required></div>
-            <div class="form-group"><label>Iqama</label><input type="text" id="newIqama" required></div>
-            <div class="form-group"><label>Salary</label><input type="number" id="newSalary" required></div>
-            <button type="submit">Add</button>
-        </form>
     </div>
-</div>
+
     <!-- Edit Employee Modal -->
     <div id="editEmployeeModal" class="modal">
         <div class="modal-content">
@@ -307,7 +309,6 @@
                 <input type="hidden" id="editId">
                 <div class="form-group"><label>Name</label><input type="text" id="editName" required></div>
                 <div class="form-group"><label>Iqama</label><input type="text" id="editIqama" required></div>
-                <div class="form-group"><label>Site</label><input type="text" id="editSite" readonly style="background:#f5f5f5;"></div>
                 <div class="form-group"><label>Salary</label><input type="number" id="editSalary" required></div>
                 <div class="form-group"><label>Status</label><select id="editStatus"><option>Active</option><option>Inactive</option></select></div>
                 <button type="submit" class="btn-save">Save Changes</button>
@@ -317,16 +318,14 @@
     </div>
 
     <script>
-        const URL = 'https://script.google.com/macros/s/AKfycbyKvIGiI-64OJZJ8JVWQgE96tz_UuezHPcHZLH9EbhKZg26ngvj7mA3x6l-dHFHSHb3/exec';
+        const URL = 'https://script.google.com/macros/s/AKfycbynF_UWp8kkfv_J6K6kxAj0DgEHcb9VniO7u_EHM9GwGb-ZitGRyFxLvmSeaontcfxL/exec';
         let currentUser = null, employees = [];
         
         const userStr = localStorage.getItem('user');
         if (!userStr) window.location.href = 'index.html';
         currentUser = JSON.parse(userStr);
-        console.log("Site Head:", currentUser);
         
         document.getElementById('siteBadge').innerHTML = `📍 Site: ${currentUser.site}`;
-        document.getElementById('newSite').value = currentUser.site;
         
         async function loadEmployees() {
             const response = await fetch(`${URL}?action=getEmployees&username=${currentUser.username}&password=${currentUser.password}`);
@@ -401,7 +400,7 @@
             const msg = document.getElementById('advanceMessage');
             msg.className = result.success ? 'message success' : 'message error';
             msg.textContent = result.message;
-            if (result.success) { document.getElementById('advanceForm').reset(); document.getElementById('site').value = ''; alert('✓ Advance added'); }
+            if (result.success) { document.getElementById('advanceForm').reset(); document.getElementById('site').value = ''; }
             setTimeout(() => msg.className = 'message', 3000);
         });
         
@@ -414,19 +413,44 @@
             const msg = document.getElementById('salaryMessage');
             msg.className = result.success ? 'message success' : 'message error';
             msg.textContent = result.message;
-            if (result.success) { document.getElementById('salaryForm').reset(); document.getElementById('salaryDuesInfo').style.display = 'none'; alert('✓ Salary recorded'); }
+            if (result.success) { document.getElementById('salaryForm').reset(); document.getElementById('salaryDuesInfo').style.display = 'none'; }
             setTimeout(() => msg.className = 'message', 3000);
+        });
+        
+        // Add Employee Form - WITH ALERT FOR DUPLICATE
+        document.getElementById('addEmployeeForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('newName').value;
+            const iqama = document.getElementById('newIqama').value;
+            const salary = document.getElementById('newSalary').value;
+            
+            if (!name || !iqama || !salary) {
+                alert("Please fill all fields");
+                return;
+            }
+            
+            const url = `${URL}?action=addEmployee&username=${currentUser.username}&password=${currentUser.password}&name=${encodeURIComponent(name)}&iqamaNo=${encodeURIComponent(iqama)}&site=${encodeURIComponent(currentUser.site)}&salary=${salary}`;
+            
+            try {
+                const response = await fetch(url);
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert("✅ " + result.message);
+                    closeAddEmployeeModal();
+                    loadEmployees();
+                    document.getElementById('addEmployeeForm').reset();
+                } else {
+                    alert("❌ " + result.message);
+                }
+            } catch (error) {
+                alert("Error: " + error.message);
+            }
         });
         
         function openAddEmployeeModal() { document.getElementById('addEmployeeModal').style.display = 'flex'; }
         function closeAddEmployeeModal() { document.getElementById('addEmployeeModal').style.display = 'none'; }
-        
-        document.getElementById('addEmployeeForm')?.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const res = await fetch(`${URL}?action=addEmployee&username=${currentUser.username}&password=${currentUser.password}&name=${encodeURIComponent(document.getElementById('newName').value)}&iqamaNo=${encodeURIComponent(document.getElementById('newIqama').value)}&site=${encodeURIComponent(currentUser.site)}&salary=${document.getElementById('newSalary').value}`);
-            const result = await res.json();
-            if (result.success) { closeAddEmployeeModal(); loadEmployees(); alert('✓ Employee added'); }
-        });
         
         async function openEditEmployeeModal(id) {
             const emp = employees.find(e => e.id == id);
@@ -434,7 +458,6 @@
             document.getElementById('editId').value = emp.id;
             document.getElementById('editName').value = emp.name;
             document.getElementById('editIqama').value = emp.iqama;
-            document.getElementById('editSite').value = emp.site;
             document.getElementById('editSalary').value = emp.salary;
             document.getElementById('editStatus').value = emp.status || 'Active';
             document.getElementById('editEmployeeModal').style.display = 'flex';
@@ -443,9 +466,16 @@
         
         document.getElementById('editEmployeeForm')?.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const res = await fetch(`${URL}?action=updateEmployee&username=${currentUser.username}&password=${currentUser.password}&employeeId=${document.getElementById('editId').value}&name=${encodeURIComponent(document.getElementById('editName').value)}&iqamaNo=${encodeURIComponent(document.getElementById('editIqama').value)}&site=${encodeURIComponent(document.getElementById('editSite').value)}&salary=${document.getElementById('editSalary').value}&status=${document.getElementById('editStatus').value}`);
-            const result = await res.json();
-            if (result.success) { closeEditEmployeeModal(); loadEmployees(); alert('✓ Employee updated'); }
+            const url = `${URL}?action=updateEmployee&username=${currentUser.username}&password=${currentUser.password}&employeeId=${document.getElementById('editId').value}&name=${encodeURIComponent(document.getElementById('editName').value)}&iqamaNo=${encodeURIComponent(document.getElementById('editIqama').value)}&site=${encodeURIComponent(currentUser.site)}&salary=${document.getElementById('editSalary').value}&status=${document.getElementById('editStatus').value}`;
+            const response = await fetch(url);
+            const result = await response.json();
+            if (result.success) {
+                alert("✅ " + result.message);
+                closeEditEmployeeModal();
+                loadEmployees();
+            } else {
+                alert("❌ " + result.message);
+            }
         });
         
         function showTab(name) {
